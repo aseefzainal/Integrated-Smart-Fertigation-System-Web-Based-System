@@ -10,6 +10,14 @@ Route::get('/', function () {
     return view('user-list');
 });
 
+Route::get('/profile', function () {
+    return view('profile');
+});
+
+Route::get('/device', function () {
+    return view('device');
+});
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
