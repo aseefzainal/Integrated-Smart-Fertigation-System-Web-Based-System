@@ -193,8 +193,8 @@
                 <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"></div>
                 <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"></div>
             </div> --}}
-            <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 mb-4">
-                <section class="bg-white dark:bg-gray-900">
+            <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 mb-4 shadow-lg">
+                <section class="bg-white dark:bg-gray-900 rounded-lg">
                     <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
                         <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">General Information</h2>
                         <form action="#">

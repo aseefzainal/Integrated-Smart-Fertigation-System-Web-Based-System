@@ -194,7 +194,7 @@
                 <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"></div>
             </div> --}}
             <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 mb-4">
-                <section class="bg-gray-50 dark:bg-gray-900">
+                <section class="bg-gray-50 dark:bg-gray-900 rounded-lg">
                     <div class="mx-auto max-w-screen-xl">
                         <!-- Start coding here -->
                         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
