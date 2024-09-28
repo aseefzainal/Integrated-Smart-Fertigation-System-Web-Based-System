@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-scrollbar">
 
 <head>
     <meta charset="UTF-8">
@@ -198,14 +198,18 @@
                     <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
                         <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">General Information</h2>
                         <form action="#">
+                            @csrf
                             <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
                                 <div>
                                     <label for="title"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
                                     <select id="title"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option selected="">Mr.</option>
-                                        <option value="TV">Ms.</option>
+                                        <option @selected($user->title === 'Mr.') value="Mr.">Mr.</option>
+                                        <option @selected($user->title === 'Ms.') value="Ms.">Ms.</option>
+                                        <option @selected($user->title === 'Mrs.') value="Mrs.">Mrs.</option>
+                                        <option @selected($user->title === 'Dr.') value="Dr.">Dr.</option>
+                                        <option @selected($user->title === 'Miss') value="Miss">Miss</option>
                                     </select>
                                 </div>
                                 <div class="w-full">
@@ -214,7 +218,7 @@
                                         Name</label>
                                     <input type="text" name="name" id="name"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Your name" required="">
+                                        placeholder="Your name" value="{{ $user->name }}" required="">
                                 </div>
                                 <div class="w-full">
                                     <label for="email"
@@ -222,15 +226,15 @@
                                         Address</label>
                                     <input type="text" name="email" id="email"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="name@company.com" required="">
+                                        placeholder="name@company.com" value="{{ $user->email }}" required="">
                                 </div>
                                 <div class="w-full">
                                     <label for="phone"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
                                         Number</label>
-                                    <input type="number" name="phone" id="phone"
+                                    <input type="text" name="phone" id="phone"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Add a phone number" required="">
+                                        placeholder="Add a phone number" value="{{ $user->phone }}" required="">
                                 </div>
                                 <div>
                                     <label for="role"
@@ -238,17 +242,19 @@
                                         Role</label>
                                     <select id="role"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option selected="">Admin</option>
-                                        <option value="TV">User</option>
+                                        <option @selected($user->role === 'admin') value="admin">Admin</option>
+                                        <option @selected($user->role === 'user') value="user">User</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="verification"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email Status</label>
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
+                                        Status</label>
                                     <select id="verification"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option selected="">Not verified</option>
-                                        <option value="TV">Verified</option>
+                                        <option @selected(is_null($user->email_verified_at)) value="">Not verified</option>
+                                        <option @selected(!is_null($user->email_verified_at)) value="{{ now() }}">Verified
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="w-full">
@@ -256,47 +262,63 @@
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Birthday</label>
                                     <input type="date" name="birthday" id="birthday"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="$2999" required="">
+                                        value="{{ $user->birthday }}" required="">
                                 </div>
                                 <div>
                                     <label for="gender"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
                                     <select id="gender"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option selected="">Male</option>
-                                        <option value="TV">Female</option>
-                                        <option value="TV">Others</option>
+                                        <option @selected($user->gender === 'male') value="male">Male</option>
+                                        <option @selected($user->gender === 'female') value="female">Female</option>
+                                        <option @selected($user->gender === 'other') value="other">Others</option>
                                     </select>
                                 </div>
                                 <h2 class="sm:col-span-2 text-xl font-bold text-gray-900 dark:text-white">Additional
                                     Information</h2>
                                 <div class="w-full">
-                                    <label for="address"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                                    <input type="text" name="address" id="address"
+                                    <label for="line1"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Line
+                                        1</label>
+                                    <input type="text" name="line1" id="line1"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Your Location" required="">
+                                        placeholder="Line 1" value="{{ optional($user->address)->address_line_1 }}">
+                                </div>
+                                <div class="w-full">
+                                    <label for="line2"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Line
+                                        2</label>
+                                    <input type="text" name="line2" id="line2"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="Line 2" value="{{ optional($user->address)->address_line_2 }}">
                                 </div>
                                 <div class="w-full">
                                     <label for="postcode"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Postcode</label>
                                     <input type="text" name="postcode" id="postcode"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Your Postcode" required="">
+                                        placeholder="Your Postcode" value="{{ optional($user->address)->postcode }}">
                                 </div>
                                 <div class="w-full">
                                     <label for="city"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City</label>
                                     <input type="text" name="city" id="city"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Your City" required="">
+                                        placeholder="Your City" value="{{ optional($user->address)->city }}">
                                 </div>
                                 <div class="w-full">
                                     <label for="state"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">State</label>
                                     <input type="text" name="state" id="state"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Your State" required="">
+                                        placeholder="Your State" value="{{ optional($user->address)->state }}">
+                                </div>
+                                <div class="w-full">
+                                    <label for="country"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
+                                    <input type="text" name="country" id="country"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="Your Country" value="{{ optional($user->address)->country }}">
                                 </div>
                                 {{-- <div class="sm:col-span-2">
                                     <label for="description"

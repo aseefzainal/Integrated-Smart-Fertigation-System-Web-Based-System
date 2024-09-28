@@ -13,9 +13,20 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+
+            $table->string('title')->nullable(); // Assuming title may not always be present.
+
             $table->string('name');
+            $table->string('username', 20)->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+
+            $table->string('phone', 20)->unique(); // Phone numbers can vary in length depending on region. Adjust accordingly.
+            $table->string('image')->default('user.jpg'); // Image file path as string.
+            $table->enum('role', ['admin', 'user'])->default('user');
+            $table->enum('gender', ['male', 'female', 'other'])->nullable(); // Enum ensures controlled values for gender.
+            $table->date('birthday')->nullable(); // Use date type instead of string for storing dates.
+
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();

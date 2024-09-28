@@ -27,9 +27,19 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'title' => fake()->randomElement(['Mr.', 'Ms.', 'Mrs.', 'Dr.', 'Miss']),
+
             'name' => fake()->name(),
+            'username' => '@' . substr(fake()->unique()->userName(), 0, 19),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+
+            'phone' => fake()->phoneNumber,
+            // 'role' => fake()->randomElement(['admin', 'user']),
+            'role' => 'user',
+            'gender' => fake()->randomElement(['male', 'female', 'other']),
+            'birthday' => fake()->date('Y-m-d'),
+
             'password' => static::$password ??= Hash::make('password'),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,

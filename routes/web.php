@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -7,15 +8,19 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', function () {
-    return view('user-list');
+    return view('user-list', ['users' => User::where('role', 'user')->paginate(10)]);
 });
 
-Route::get('/profile', function () {
-    return view('profile');
+Route::get('/profile/{user:username}', function (User $user) {
+    return view('profile', ['user' => $user]);
 });
 
-Route::get('/device', function () {
-    return view('device');
+Route::get('/device/{user:username} ', function (User $user) {
+    return view('device', [
+        'projects' => $user->projects,
+        'inputs' => '',
+        'schedules' => '',
+    ]);
 });
 
 Route::middleware([
