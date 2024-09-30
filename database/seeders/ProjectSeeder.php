@@ -15,6 +15,11 @@ class ProjectSeeder extends Seeder
     {
         $projects = [
             [
+                'user_id' => 1,
+                'name' => 'Final Year Project',
+                'slug' => 'fyp'
+            ],
+            [
                 'user_id' => 2,
                 'name' => 'Telong Site',
                 'slug' => 'telong-site'

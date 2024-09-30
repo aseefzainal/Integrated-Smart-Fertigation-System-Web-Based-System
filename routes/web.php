@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\ProjectSensor;
 use App\Models\User;
+use App\Models\SensorReading;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -16,10 +18,26 @@ Route::get('/profile/{user:username}', function (User $user) {
 });
 
 Route::get('/device/{user:username} ', function (User $user) {
+
+    $project = $user->projects->first();
+
+    // Get the latest readings for all sensors
+    $sensors = $project->latestSensors()->get();
+
+    // Fetch the last 10 readings for a specific sensor
+    $sensorReadings = ProjectSensor::where('sensor_id', 1)
+        ->orderBy('created_at', 'desc')
+        ->take(10)
+        ->get();
+
+    // dd($project->latestSensors);
+
     return view('device', [
         'projects' => $user->projects,
-        'inputs' => '',
-        'schedules' => '',
+        'inputs' => $project->inputs,
+        'schedules' => $project->schedules()->paginate(5),
+        'sensors' => $sensors,
+        'sensorReadings' => $sensorReadings // Pass sensor readings to the view
     ]);
 });
 

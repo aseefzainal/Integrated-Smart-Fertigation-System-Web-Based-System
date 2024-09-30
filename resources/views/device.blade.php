@@ -212,7 +212,7 @@
                         aria-labelledby="projectListDropdownButton">
                         @foreach ($projects as $project)
                             <li>
-                                <a href="3"
+                                <a href="/device/{{ $project->slug }}"
                                     class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                     {{ $project->name }}</a>
                             </li>
@@ -262,53 +262,58 @@
 
             <div class="grid grid-cols-2 gap-3 mb-4">
                 <div
-                    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar">
-                    <div class="flex justify-between py-2 px-3 text-sm sticky top-0 bg-white z-10">
+                    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
+                    <div
+                        class="flex justify-between items-center py-2 px-3 text-sm sticky top-0 z-10 bg-white shadow-sm">
                         <h3>Input</h3>
                         <span class="text-blue-600 cursor-pointer hover:underline">Manual Control</span>
                     </div>
-                    <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
-                        <div class="flex shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3 items-start">
-                            <div>
-                                <h3>M1</h3>
-                                <p class="text-xs text-slate-600 mt-2 mr-2">Note: This input will automatically turn
-                                    off
-                                    when soil is moisture</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" value="" class="sr-only peer">
-                                <div
-                                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
+                    @if (!$inputs->isEmpty())
+                        <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
+                            @foreach ($inputs as $input)
+                                <div class="flex shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3 items-start">
+                                    <div>
+                                        <h3>{{ $input->pivot->custom_name }}</h3>
+                                        <p class="text-xs text-slate-600 mt-2 mr-2">Note: {{ $input->description }}</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" value="" class="sr-only peer"
+                                            {{ $input->pivot->status === 1 ? 'checked' : '' }}>
+                                        <div
+                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
+                                        </div>
+                                    </label>
                                 </div>
-                            </label>
+                            @endforeach
                         </div>
-                    </div>
+                    @else
+                        <div class="col-span-2 h-full flex flex-col justify-center items-center bg-slate-100">
+                            <p>No inputs have been added to this project yet.</p>
+                            <p class="mt-2">Please contact an administrator to add inputs to this project.</p>
+                        </div>
+                    @endif
                 </div>
                 <div
-                    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar">
-                    <div class="flex justify-between py-2 px-3 text-sm sticky top-0 bg-white z-10">
+                    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
+                    <div class="flex justify-between py-2 px-3 text-sm sticky top-0 bg-white z-10 shadow-sm">
                         <h3>Data Sensor</h3>
                         <span class="text-blue-600 cursor-pointer hover:underline">Setting</span>
                     </div>
-                    <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
-                        <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
-                            <i class="fi fi-sr-bag-seedling text-[1.7rem] pt-2"></i>
-                            {{-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                class="size-8">
-                                <path
-                                    d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
-                                <path fill-rule="evenodd"
-                                    d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z"
-                                    clip-rule="evenodd" />
-                            </svg> --}}
-                            <div class="ml-3 pl-3 border-s-[1px]">
-                                <h3>EC Meter Sensor</h3>
-                                <div class="text-green-600 mt-2">
-                                    <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
+                    @if (!$sensors->isEmpty())
+                        <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
+                            @foreach ($sensors as $sensor)
+                                <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
+                                    <i class="fi fi-sr-bag-seedling text-[1.7rem] pt-2"></i>
+                                    <div class="ml-3 pl-3 border-s-[1px]">
+                                        <h3>{{ $sensor->name }}</h3>
+                                        <div class="text-green-600 mt-2">
+                                            <h3 class="text-2xl">{{ $sensor->value }}<span
+                                                    class="text-sm">{{ $sensor->unit }}</span></h3>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
+                            @endforeach
+                            {{-- <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                 class="size-8">
                                 <path
@@ -326,14 +331,6 @@
                         </div>
                         <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
                             <i class="fi fi-ss-raindrops text-2xl pt-2"></i>
-                            {{-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                class="size-8">
-                                <path
-                                    d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
-                                <path fill-rule="evenodd"
-                                    d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z"
-                                    clip-rule="evenodd" />
-                            </svg> --}}
                             <div class="ml-3 pl-3 border-s-[1px]">
                                 <h3>EC Meter Sensor</h3>
                                 <div class="text-green-600 mt-2">
@@ -358,8 +355,14 @@
                                     <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
                                 </div>
                             </div>
+                        </div> --}}
                         </div>
-                    </div>
+                    @else
+                        <div class="col-span-2 h-full flex flex-col justify-center items-center bg-slate-100">
+                            <p>No data sensors are currently connected to this project.</p>
+                            <p class="mt-2">Please contact an administrator to add sensors.</p>
+                        </div>
+                    @endif
                 </div>
                 <div
                     class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-96 bg-white py-3 shadow-lg flex flex-col">
@@ -408,12 +411,12 @@
                 </div>
                 <div
                     class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-96 shadow-lg">
-                    <section class="bg-gray-50 dark:bg-gray-900">
-                        <div class="mx-auto max-w-screen-xl">
+                    <section class="bg-gray-50 dark:bg-gray-900 h-full">
+                        <div class="mx-auto max-w-screen-xl h-full">
                             <!-- Start coding here -->
-                            <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                            <div class="bg-white dark:bg-gray-800 relative sm:rounded-lg overflow-hidden h-full flex flex-col">
                                 <div
-                                    class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-3">
+                                    class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-3 shadow-sm">
                                     {{-- <div class="w-full md:w-1/2"> --}}
                                     {{-- <form class="flex items-center">
                                             <label for="simple-search" class="sr-only">Search</label>
@@ -513,108 +516,77 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="overflow-x-auto">
-                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                        <thead
-                                            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                            <tr>
-                                                <th scope="col" class="px-4 py-3">HST</th>
-                                                <th scope="col" class="px-4 py-3">Irrigation</th>
-                                                <th scope="col" class="px-4 py-3">Date</th>
-                                                <th scope="col" class="px-4 py-3">Time</th>
-                                                <th scope="col" class="px-4 py-3">Status</th>
-                                                <th scope="col" class="px-4 py-3">
-                                                    <span class="sr-only">Actions</span>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="border-b dark:border-gray-700 text-xs">
-                                                <th scope="row"
-                                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    HST-63</th>
-                                                <td class="px-4 py-3">Water Irrigation</td>
-                                                <td class="px-4 py-3">26 Jan 2024</td>
-                                                <td class="px-4 py-3">8:50 pm</td>
-                                                <td class="px-4 py-3"><span
-                                                        class="rounded-xl border-green-400 border-[1px] py-1 px-3 text-green-400">Success</span>
-                                                </td>
-                                                <td class="px-4 py-3 flex items-center justify-end">
-                                                    <button id="apple-imac-27-dropdown-button"
-                                                        data-dropdown-toggle="apple-imac-27-dropdown"
-                                                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                                        type="button">
-                                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                            viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                        </svg>
-                                                    </button>
-                                                    <div id="apple-imac-27-dropdown"
-                                                        class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                                            aria-labelledby="apple-imac-27-dropdown-button">
-                                                            <li>
-                                                                <a href="#"
-                                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#"
-                                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                                            </li>
-                                                        </ul>
-                                                        <div class="py-1">
-                                                            <a href="#"
-                                                                class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="border-b dark:border-gray-700 text-xs">
-                                                <th scope="row"
-                                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    HST-63</th>
-                                                <td class="px-4 py-3">Fertilizer Irrigation</td>
-                                                <td class="px-4 py-3">26 Jan 2024</td>
-                                                <td class="px-4 py-3">8:50 pm</td>
-                                                <td class="px-4 py-3"><span
-                                                        class="rounded-xl border-green-400 border-[1px] py-1 px-3 text-green-400">Success</span>
-                                                </td>
-                                                <td class="px-4 py-3 flex items-center justify-end">
-                                                    <button id="apple-imac-27-dropdown-button"
-                                                        data-dropdown-toggle="apple-imac-27-dropdown"
-                                                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                                        type="button">
-                                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                            viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                        </svg>
-                                                    </button>
-                                                    <div id="apple-imac-27-dropdown"
-                                                        class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                                            aria-labelledby="apple-imac-27-dropdown-button">
-                                                            <li>
-                                                                <a href="#"
-                                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#"
-                                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                                            </li>
-                                                        </ul>
-                                                        <div class="py-1">
-                                                            <a href="#"
-                                                                class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                                @if (!$schedules->isEmpty())
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                            <thead
+                                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                <tr>
+                                                    <th scope="col" class="px-4 py-3">HST</th>
+                                                    <th scope="col" class="px-4 py-3">Irrigation</th>
+                                                    <th scope="col" class="px-4 py-3">Date</th>
+                                                    <th scope="col" class="px-4 py-3">Time</th>
+                                                    <th scope="col" class="px-4 py-3">Status</th>
+                                                    <th scope="col" class="px-4 py-3">
+                                                        <span class="sr-only">Actions</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($schedules as $schedule)
+                                                    <tr class="border-b dark:border-gray-700 text-xs">
+                                                        <th scope="row"
+                                                            class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                            {{ $schedule->hst }}</th>
+                                                        <td class="px-4 py-3">
+                                                            {{ $schedule->projectInput->custom_name }}
+                                                        </td>
+                                                        {{-- <td class="px-4 py-3">26 Jan 2024</td> --}}
+                                                        <td class="px-4 py-3">{{ $schedule->date->format('d M Y') }}
+                                                        </td>
+                                                        {{-- <td class="px-4 py-3">8:50 pm</td> --}}
+                                                        <td class="px-4 py-3">{{ $schedule->time->format('g:i A') }}
+                                                        </td>
+                                                        <td class="px-4 py-3"><span
+                                                                class="rounded-xl {{ $schedule->status == 1 ? 'border-green-400' : 'border-yellow-400' }} border-[1px] py-1 px-3 {{ $schedule->status == 1 ? 'text-green-400' : 'text-yellow-400' }}">{{ $schedule->status == 1 ? 'Success' : 'Pending' }}</span>
+                                                        </td>
+                                                        <td class="px-4 py-3 flex items-center justify-end">
+                                                            <button id="{{ $schedule->id }}-dropdown-button"
+                                                                data-dropdown-toggle="{{ $schedule->id }}-dropdown"
+                                                                class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                                                type="button">
+                                                                <svg class="w-5 h-5" aria-hidden="true"
+                                                                    fill="currentColor" viewbox="0 0 20 20"
+                                                                    xmlns="http://www.w3.org/2000/svg">
+                                                                    <path
+                                                                        d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                                </svg>
+                                                            </button>
+                                                            <div id="{{ $schedule->id }}-dropdown"
+                                                                class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                                                    aria-labelledby="{{ $schedule->id }}-dropdown-button">
+                                                                    <li>
+                                                                        <a href="#"
+                                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#"
+                                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
+                                                                    </li>
+                                                                </ul>
+                                                                <div class="py-1">
+                                                                    <a href="#"
+                                                                        class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{-- <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
                                     aria-label="Table navigation">
                                     <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                                         Showing
@@ -668,7 +640,19 @@
                                             </a>
                                         </li>
                                     </ul>
-                                </nav>
+                                </nav> --}}
+                                    {{ $schedules->links() }}
+                                @else
+                                    {{-- <tr class="h-full bg-slate-200 flex flex-col justify-center items-center">
+                                        <td>No data sensors are currently connected to this project.</td>
+                                        <td class="mt-2">Please contact an administrator to add sensors.
+                                        </td>
+                                    </tr> --}}
+                                    <div class="bg-slate-100 flex flex-col justify-center items-center h-full">
+                                        <p>No data sensors are currently connected to this project.</p>
+                                        <p class="mt-2">Please contact an administrator to add sensors.</p>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </section>
