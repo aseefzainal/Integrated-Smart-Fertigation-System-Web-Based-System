@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    {{-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
     <title>Document</title>
 </head>
 
-<body>
+<body class="bg-gray-50">
     <div class="antialiased bg-gray-50 dark:bg-gray-900">
         <button data-drawer-target="drawer-navigation" data-drawer-toggle="drawer-navigation"
             aria-controls="drawer-navigation"
@@ -188,207 +190,91 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg dark:border-gray-600 h-32 md:h-64"></div>
-                <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"></div>
-                <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"></div>
-                <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"></div>
-            </div> --}}
-            {{-- <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 mb-4"></div> --}}
-            <div class="flex items-center justify-end space-x-3 w-full md:w-auto mb-3 mt-7">
-                <button id="projectListDropdownButton" data-dropdown-toggle="projectListDropdown"
-                    class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                    type="button">
-                    <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path clip-rule="evenodd" fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            @if ($projects->isEmpty())
+                <div
+                    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4 flex flex-col justify-center items-center mt-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-24 text-slate-600">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                     </svg>
-                    Project List
-                </button>
-                <div id="projectListDropdown"
-                    class="hidden z-20 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                        aria-labelledby="projectListDropdownButton">
-                        @foreach ($projects as $project)
-                            <li>
-                                <a href="/device/{{ $project->slug }}"
-                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                    {{ $project->name }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                    {{-- <div class="py-1">
-                        <a href="#"
-                            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
-                            all</a>
-                    </div> --}}
-                </div>
-                <button id="exportDropdownButton" data-dropdown-toggle="exportDropdown"
-                    class="w-full md:w-auto flex items-center justify-center py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                    type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                        class="h-5 w-5 text-gray-400 mr-2">
+                    {{-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                         <path fill-rule="evenodd"
-                            d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm5.845 17.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V12a.75.75 0 0 0-1.5 0v4.19l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z"
+                            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
                             clip-rule="evenodd" />
-                        <path
-                            d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
-                    </svg>
+                    </svg> --}}
 
-                    Export
-                    <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path clip-rule="evenodd" fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                    </svg>
-                </button>
-                <div id="exportDropdown"
-                    class="hidden z-20 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actionsDropdownButton">
-                        <li>
-                            <a href="#"
-                                class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass
-                                Edit</a>
-                        </li>
-                    </ul>
-                    <div class="py-1">
-                        <a href="#"
-                            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
-                            all</a>
-                    </div>
+                    <p class="my-4">This user has no active projects. Create a new project to get started.</p>
+                    {{-- <p>Ready to start your first project? Contact customer support for assistance.</p> --}}
+                    {{-- <p>You currently have no projects. Please contact our customer support team to get started.</p> --}}
+                    <button type="button"
+                        class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                        <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                        </svg>
+                        Create new project
+                    </button>
                 </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 mb-4">
-                <div
-                    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
-                    <div
-                        class="flex justify-between items-center py-2 px-3 text-sm sticky top-0 z-10 bg-white shadow-sm">
-                        <h3>Input</h3>
-                        <span class="text-blue-600 cursor-pointer hover:underline">Manual Control</span>
-                    </div>
-                    @if (!$inputs->isEmpty())
-                        <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
-                            @foreach ($inputs as $input)
-                                <div class="flex shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3 items-start">
-                                    <div>
-                                        <h3>{{ $input->pivot->custom_name }}</h3>
-                                        <p class="text-xs text-slate-600 mt-2 mr-2">Note: {{ $input->description }}</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" value="" class="sr-only peer"
-                                            {{ $input->pivot->status === 1 ? 'checked' : '' }}>
-                                        <div
-                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
-                                        </div>
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="col-span-2 h-full flex flex-col justify-center items-center bg-slate-100">
-                            <p>No inputs have been added to this project yet.</p>
-                            <p class="mt-2">Please contact an administrator to add inputs to this project.</p>
-                        </div>
-                    @endif
-                </div>
-                <div
-                    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
-                    <div class="flex justify-between py-2 px-3 text-sm sticky top-0 bg-white z-10 shadow-sm">
-                        <h3>Data Sensor</h3>
-                        <span class="text-blue-600 cursor-pointer hover:underline">Setting</span>
-                    </div>
-                    @if (!$sensors->isEmpty())
-                        <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
-                            @foreach ($sensors as $sensor)
-                                <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
-                                    <i class="fi fi-sr-bag-seedling text-[1.7rem] pt-2"></i>
-                                    <div class="ml-3 pl-3 border-s-[1px]">
-                                        <h3>{{ $sensor->name }}</h3>
-                                        <div class="text-green-600 mt-2">
-                                            <h3 class="text-2xl">{{ $sensor->value }}<span
-                                                    class="text-sm">{{ $sensor->unit }}</span></h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            {{-- <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                class="size-8">
-                                <path
-                                    d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
-                                <path fill-rule="evenodd"
-                                    d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <div class="ml-3 pl-3 border-s-[1px]">
-                                <h3>EC Meter Sensor</h3>
-                                <div class="text-green-600 mt-2">
-                                    <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
-                            <i class="fi fi-ss-raindrops text-2xl pt-2"></i>
-                            <div class="ml-3 pl-3 border-s-[1px]">
-                                <h3>EC Meter Sensor</h3>
-                                <div class="text-green-600 mt-2">
-                                    <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
-                            <i class="fi fi-ss-raindrops text-2xl pt-2"></i>
-                            <div class="ml-3 pl-3 border-s-[1px]">
-                                <h3>EC Meter Sensor</h3>
-                                <div class="text-green-600 mt-2">
-                                    <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
-                            <i class="fi fi-ss-raindrops text-2xl pt-2"></i>
-                            <div class="ml-3 pl-3 border-s-[1px]">
-                                <h3>EC Meter Sensor</h3>
-                                <div class="text-green-600 mt-2">
-                                    <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
-                                </div>
-                            </div>
-                        </div> --}}
-                        </div>
-                    @else
-                        <div class="col-span-2 h-full flex flex-col justify-center items-center bg-slate-100">
-                            <p>No data sensors are currently connected to this project.</p>
-                            <p class="mt-2">Please contact an administrator to add sensors.</p>
-                        </div>
-                    @endif
-                </div>
-                <div
-                    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-96 bg-white py-3 shadow-lg flex flex-col">
-                    <div class="flex items-center justify-between px-3">
-                        <div class="flex items-center">
-                            <div class="w-5 h-3 bg-[rgb(255,99,132)] mr-2"></div>
-                            <h3 class="text-sm">EC Sensor</h3>
-                        </div>
-                        <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown2"
+            @else
+                {{-- @livewire('project-filter-component', ['projects' => $projects]) --}}
+                <div class="flex justify-between mb-3 mt-5">
+                    <button type="button"
+                        class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                        <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                        </svg>
+                        Create new project
+                    </button>
+                    <div class="flex items-center justify-end space-x-3 w-full md:w-auto">
+                        <button id="projectListDropdownButton" data-dropdown-toggle="projectListDropdown"
                             class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                             type="button">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
-                                    clip-rule="evenodd" />
+                            <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                             </svg>
-                            Filter
+                            Project List
+                        </button>
+                        <div id="projectListDropdown"
+                            class="hidden z-20 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                aria-labelledby="projectListDropdownButton">
+                                @foreach ($projects as $project)
+                                    <li>
+                                        <a href="/device/{{ $project->slug }}"
+                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            {{ $project->name }}</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        <button id="exportDropdownButton" data-dropdown-toggle="exportDropdown"
+                            class="w-full md:w-auto flex items-center justify-center py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                            type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                class="h-5 w-5 text-gray-400 mr-2">
+                                <path fill-rule="evenodd"
+                                    d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm5.845 17.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V12a.75.75 0 0 0-1.5 0v4.19l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z"
+                                    clip-rule="evenodd" />
+                                <path
+                                    d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
+                            </svg>
+
+                            Export
                             <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <path clip-rule="evenodd" fill-rule="evenodd"
                                     d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                             </svg>
                         </button>
-                        <div id="filterDropdown2"
-                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                        <div id="exportDropdown"
+                            class="hidden z-20 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                 aria-labelledby="actionsDropdownButton">
                                 <li>
@@ -404,270 +290,361 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <canvas id="myChart"></canvas> --}}
-                    <div class="w-full h-full pl-1">
-                        <canvas id="myChart"></canvas>
-                    </div>
                 </div>
-                <div
-                    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-96 shadow-lg">
-                    <section class="bg-gray-50 dark:bg-gray-900 h-full">
-                        <div class="mx-auto max-w-screen-xl h-full">
-                            <!-- Start coding here -->
-                            <div class="bg-white dark:bg-gray-800 relative sm:rounded-lg overflow-hidden h-full flex flex-col">
-                                <div
-                                    class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-3 shadow-sm">
-                                    {{-- <div class="w-full md:w-1/2"> --}}
-                                    {{-- <form class="flex items-center">
-                                            <label for="simple-search" class="sr-only">Search</label>
-                                            <div class="relative w-full">
-                                                <div
-                                                    class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                                    <svg aria-hidden="true"
-                                                        class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                                                        fill="currentColor" viewbox="0 0 20 20"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd"
-                                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                                            clip-rule="evenodd" />
-                                                    </svg>
-                                                </div>
-                                                <input type="text" id="simple-search"
-                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                    placeholder="Search" required="">
-                                            </div>
-                                        </form> --}}
-                                    <h3 class="text-sm">Irrigation schedule</h3>
-                                    {{-- </div> --}}
-                                    <div
-                                        class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                                        <button type="button"
-                                            class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
-                                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                <path clip-rule="evenodd" fill-rule="evenodd"
-                                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                                            </svg>
-                                            Add schedule
-                                        </button>
-                                        <div class="flex items-center space-x-3 w-full md:w-auto">
-                                            <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown"
-                                                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                                                type="button">
-                                                <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor"
-                                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-                                                    aria-hidden="true">
-                                                    <path clip-rule="evenodd" fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                                </svg>
-                                                Actions
-                                            </button>
-                                            <div id="actionsDropdown"
-                                                class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                                    aria-labelledby="actionsDropdownButton">
-                                                    <li>
-                                                        <a href="#"
-                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass
-                                                            Edit</a>
-                                                    </li>
-                                                </ul>
-                                                <div class="py-1">
-                                                    <a href="#"
-                                                        class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
-                                                        all</a>
-                                                </div>
-                                            </div>
-                                            <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
-                                                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                                                type="button">
-                                                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                                    class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20"
-                                                    fill="currentColor">
-                                                    <path fill-rule="evenodd"
-                                                        d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                                Filter
-                                                <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor"
-                                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-                                                    aria-hidden="true">
-                                                    <path clip-rule="evenodd" fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                                </svg>
-                                            </button>
-                                            <div id="filterDropdown"
-                                                class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                                    aria-labelledby="actionsDropdownButton">
-                                                    <li>
-                                                        <a href="#"
-                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass
-                                                            Edit</a>
-                                                    </li>
-                                                </ul>
-                                                <div class="py-1">
-                                                    <a href="#"
-                                                        class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
-                                                        all</a>
-                                                </div>
-                                            </div>
 
+                {{--  --}}
+                {{-- <div wire:loading.remove> --}}
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    @livewire('input-filter', ['project_id' => $projects->first()->id])
+                    {{-- @livewire('input-filter', ['inputs' => $inputs]) --}}
+                    {{-- <div
+                        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
+                        <div
+                            class="flex justify-between items-center py-2 px-3 text-sm sticky top-0 z-10 bg-white shadow-sm">
+                            <h3>Input</h3>
+                            <span class="text-blue-600 cursor-pointer hover:underline">Switch to Manual
+                                Control</span>
+                        </div>
+                        {{-- @dd($projects->first()->id); --}}
+                        {{-- @if (!$inputs->isEmpty())
+                            <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
+                                @dump($inputs)
+                                @foreach ($inputs as $input)
+                                    @if ($input->type === 'auto')
+                                        <div
+                                            class="flex shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3 items-start">
+                                            <div>
+                                                <h3>{{ $input->pivot->custom_name }}</h3>
+                                                <p class="text-xs text-slate-600 mt-2 mr-2">Note:
+                                                    {{ $input->description }}
+                                                </p>
+                                            </div>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" value="" class="sr-only peer"
+                                                    {{ $input->pivot->status === 1 ? 'checked' : '' }}>
+                                                <div
+                                                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
+                                                </div>
+                                            </label>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="col-span-2 h-full flex flex-col justify-center items-center bg-slate-100">
+                                <p>No inputs have been added to this project yet.
+                                </p>
+                                <p class="mt-2">Please contact an administrator to add inputs to this project.
+                                </p>
+                            </div>
+                        @endif
+                    </div> --}}
+                    <div
+                        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
+                        <div class="flex justify-between py-2 px-3 text-sm sticky top-0 bg-white z-10 shadow-sm">
+                            <h3>Data Sensor</h3>
+                            <span class="text-blue-600 cursor-pointer hover:underline">Setting</span>
+                        </div>
+                        @if (!$sensors->isEmpty())
+                            {{-- @if (!empty($sensors)) --}}
+                            <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
+                                @foreach ($sensors as $sensor)
+                                    <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
+                                        <i class="fi fi-sr-bag-seedling text-[1.7rem] pt-2"></i>
+                                        <div class="ml-3 pl-3 border-s-[1px]">
+                                            <h3>{{ $sensor->name }}</h3>
+                                            <div class="text-green-600 mt-2">
+                                                <h3 class="text-2xl">{{ $sensor->value }}<span
+                                                        class="text-sm">{{ $sensor->unit }}</span></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                        class="size-8">
+                                        <path
+                                            d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+                                        <path fill-rule="evenodd"
+                                            d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    <div class="ml-3 pl-3 border-s-[1px]">
+                                        <h3>EC Meter Sensor</h3>
+                                        <div class="text-green-600 mt-2">
+                                            <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
                                         </div>
                                     </div>
                                 </div>
-                                @if (!$schedules->isEmpty())
-                                    <div class="overflow-x-auto">
-                                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                            <thead
-                                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                                <tr>
-                                                    <th scope="col" class="px-4 py-3">HST</th>
-                                                    <th scope="col" class="px-4 py-3">Irrigation</th>
-                                                    <th scope="col" class="px-4 py-3">Date</th>
-                                                    <th scope="col" class="px-4 py-3">Time</th>
-                                                    <th scope="col" class="px-4 py-3">Status</th>
-                                                    <th scope="col" class="px-4 py-3">
-                                                        <span class="sr-only">Actions</span>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($schedules as $schedule)
-                                                    <tr class="border-b dark:border-gray-700 text-xs">
-                                                        <th scope="row"
-                                                            class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                            {{ $schedule->hst }}</th>
-                                                        <td class="px-4 py-3">
-                                                            {{ $schedule->projectInput->custom_name }}
-                                                        </td>
-                                                        {{-- <td class="px-4 py-3">26 Jan 2024</td> --}}
-                                                        <td class="px-4 py-3">{{ $schedule->date->format('d M Y') }}
-                                                        </td>
-                                                        {{-- <td class="px-4 py-3">8:50 pm</td> --}}
-                                                        <td class="px-4 py-3">{{ $schedule->time->format('g:i A') }}
-                                                        </td>
-                                                        <td class="px-4 py-3"><span
-                                                                class="rounded-xl {{ $schedule->status == 1 ? 'border-green-400' : 'border-yellow-400' }} border-[1px] py-1 px-3 {{ $schedule->status == 1 ? 'text-green-400' : 'text-yellow-400' }}">{{ $schedule->status == 1 ? 'Success' : 'Pending' }}</span>
-                                                        </td>
-                                                        <td class="px-4 py-3 flex items-center justify-end">
-                                                            <button id="{{ $schedule->id }}-dropdown-button"
-                                                                data-dropdown-toggle="{{ $schedule->id }}-dropdown"
-                                                                class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                                                type="button">
-                                                                <svg class="w-5 h-5" aria-hidden="true"
-                                                                    fill="currentColor" viewbox="0 0 20 20"
-                                                                    xmlns="http://www.w3.org/2000/svg">
-                                                                    <path
-                                                                        d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div id="{{ $schedule->id }}-dropdown"
-                                                                class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                                                    aria-labelledby="{{ $schedule->id }}-dropdown-button">
-                                                                    <li>
-                                                                        <a href="#"
-                                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="#"
-                                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                                                    </li>
-                                                                </ul>
-                                                                <div class="py-1">
-                                                                    <a href="#"
-                                                                        class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
+                                    <i class="fi fi-ss-raindrops text-2xl pt-2"></i>
+                                    <div class="ml-3 pl-3 border-s-[1px]">
+                                        <h3>EC Meter Sensor</h3>
+                                        <div class="text-green-600 mt-2">
+                                            <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
+                                        </div>
                                     </div>
-                                    {{-- <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                                    aria-label="Table navigation">
-                                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                        Showing
-                                        <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
-                                        of
-                                        <span class="font-semibold text-gray-900 dark:text-white">1000</span>
-                                    </span>
-                                    <ul class="inline-flex items-stretch -space-x-px">
-                                        <li>
-                                            <a href="#"
-                                                class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                                <span class="sr-only">Previous</span>
-                                                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd"
-                                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" aria-current="page"
-                                                class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                                <span class="sr-only">Next</span>
-                                                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd"
-                                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav> --}}
-                                    {{ $schedules->links() }}
-                                @else
-                                    {{-- <tr class="h-full bg-slate-200 flex flex-col justify-center items-center">
-                                        <td>No data sensors are currently connected to this project.</td>
-                                        <td class="mt-2">Please contact an administrator to add sensors.
-                                        </td>
-                                    </tr> --}}
-                                    <div class="bg-slate-100 flex flex-col justify-center items-center h-full">
-                                        <p>No data sensors are currently connected to this project.</p>
-                                        <p class="mt-2">Please contact an administrator to add sensors.</p>
+                                </div>
+                                <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
+                                    <i class="fi fi-ss-raindrops text-2xl pt-2"></i>
+                                    <div class="ml-3 pl-3 border-s-[1px]">
+                                        <h3>EC Meter Sensor</h3>
+                                        <div class="text-green-600 mt-2">
+                                            <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
+                                        </div>
                                     </div>
-                                @endif
+                                </div>
+                                <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
+                                    <i class="fi fi-ss-raindrops text-2xl pt-2"></i>
+                                    <div class="ml-3 pl-3 border-s-[1px]">
+                                        <h3>EC Meter Sensor</h3>
+                                        <div class="text-green-600 mt-2">
+                                            <h3 class="text-2xl">87<span class="text-sm">%</span></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="col-span-2 h-full flex flex-col justify-center items-center bg-slate-100">
+                                <p>No data sensors are currently connected to this project.</p>
+                                <p class="mt-2">Please contact an administrator to add sensors.</p>
+                            </div>
+                        @endif
+                    </div>
+                    {{-- <div
+                        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-96 bg-white shadow-lg flex flex-col">
+                        <div class="flex items-center justify-between py-3 px-3">
+                            <div class="flex items-center">
+                                <div class="w-5 h-3 bg-[rgb(255,99,132)] mr-2"></div>
+                                <h3 class="text-sm">EC Sensor</h3>
+                            </div>
+                            <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown2"
+                                class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                    class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Filter
+                                <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                </svg>
+                            </button>
+                            <div id="filterDropdown2"
+                                class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="actionsDropdownButton">
+                                    @foreach ($sensors as $sensor)
+                                        <li>
+                                            <a href="/device/{{ $sensor->slug }}"
+                                                class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ $sensor->name }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </div>
-                    </section>
+                        @if (!empty($chartData['data']))
+                            <div class="w-full h-full pl-1">
+                                <canvas id="myChart"></canvas>
+                            </div>
+                        @else
+                            <div class="h-full flex flex-col justify-center items-center bg-slate-100">
+                                <p>No data sensors are currently connected to this project.</p>
+                                <p class="mt-2">Please contact an administrator to add sensors.</p>
+                            </div>
+                        @endif
+                    </div> --}}
+                    @livewire('chart-filter', ['project_id' => $projects->first()->id])
+                    {{-- <div
+                        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-96 shadow-lg">
+                        <section class="bg-gray-50 dark:bg-gray-900 h-full">
+                            <div class="mx-auto max-w-screen-xl h-full">
+                                <div
+                                    class="bg-white dark:bg-gray-800 relative sm:rounded-lg overflow-hidden h-full flex flex-col">
+                                    <div
+                                        class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-3 shadow-sm">
+
+                                        <h3 class="text-sm">Irrigation schedule</h3>
+                                        <div
+                                            class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                                            <button type="button"
+                                                class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                                                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                                </svg>
+                                                Add schedule
+                                            </button>
+                                            <div class="flex items-center space-x-3 w-full md:w-auto">
+                                                <button id="actionsDropdownButton"
+                                                    data-dropdown-toggle="actionsDropdown"
+                                                    class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                                    type="button">
+                                                    <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor"
+                                                        viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                                                        aria-hidden="true">
+                                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                                    </svg>
+                                                    Actions
+                                                </button>
+                                                <div id="actionsDropdown"
+                                                    class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                                        aria-labelledby="actionsDropdownButton">
+                                                        <li>
+                                                            <a href="#"
+                                                                class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass
+                                                                Edit</a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="py-1">
+                                                        <a href="#"
+                                                            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
+                                                            all</a>
+                                                    </div>
+                                                </div>
+                                                <button id="filterDropdownButton"
+                                                    data-dropdown-toggle="filterDropdown"
+                                                    class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                                    type="button">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                                        class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20"
+                                                        fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    Filter
+                                                    <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor"
+                                                        viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                                                        aria-hidden="true">
+                                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                                    </svg>
+                                                </button>
+                                                <div id="filterDropdown"
+                                                    class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                                        aria-labelledby="actionsDropdownButton">
+                                                        <li>
+                                                            <a href="#"
+                                                                class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass
+                                                                Edit</a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="py-1">
+                                                        <a href="#"
+                                                            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
+                                                            all</a>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (!$schedules->isEmpty())
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                                <thead
+                                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                    <tr>
+                                                        <th scope="col" class="px-4 py-3">HST</th>
+                                                        <th scope="col" class="px-4 py-3">Irrigation</th>
+                                                        <th scope="col" class="px-4 py-3">Date</th>
+                                                        <th scope="col" class="px-4 py-3">Time</th>
+                                                        <th scope="col" class="px-4 py-3">Status</th>
+                                                        <th scope="col" class="px-4 py-3">
+                                                            <span class="sr-only">Actions</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($schedules as $schedule)
+                                                        <tr class="border-b dark:border-gray-700 text-xs">
+                                                            <th scope="row"
+                                                                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                                {{ $schedule->hst }}</th>
+                                                            <td class="px-4 py-3">
+                                                                {{ $schedule->projectInput->custom_name }}
+                                                            </td>
+                                                            <td class="px-4 py-3">
+                                                                {{ $schedule->date->format('d M Y') }}
+                                                            </td>
+                                                            <td class="px-4 py-3">
+                                                                {{ $schedule->time->format('g:i A') }}
+                                                            </td>
+                                                            <td class="px-4 py-3"><span
+                                                                    class="rounded-xl {{ $schedule->status == 1 ? 'border-green-400' : 'border-yellow-400' }} border-[1px] py-1 px-3 {{ $schedule->status == 1 ? 'text-green-400' : 'text-yellow-400' }}">{{ $schedule->status == 1 ? 'Success' : 'Pending' }}</span>
+                                                            </td>
+                                                            <td class="px-4 py-3 flex items-center justify-end">
+                                                                <button id="{{ $schedule->id }}-dropdown-button"
+                                                                    data-dropdown-toggle="{{ $schedule->id }}-dropdown"
+                                                                    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                                                    type="button">
+                                                                    <svg class="w-5 h-5" aria-hidden="true"
+                                                                        fill="currentColor" viewbox="0 0 20 20"
+                                                                        xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                                    </svg>
+                                                                </button>
+                                                                <div id="{{ $schedule->id }}-dropdown"
+                                                                    class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                                                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                                                        aria-labelledby="{{ $schedule->id }}-dropdown-button">
+                                                                        <li>
+                                                                            <a href="#"
+                                                                                class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#"
+                                                                                class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="py-1">
+                                                                        <a href="#"
+                                                                            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        {{ $schedules->links() }}
+                                    @else
+                                        <div class="bg-slate-100 flex flex-col justify-center items-center h-full">
+                                            <p>No data sensors are currently connected to this project.</p>
+                                            <p class="mt-2">Please contact an administrator to add sensors.</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </section>
+                    </div> --}}
+                    @livewire('schedule-filter', ['project_id' => $projects->first()->id])
                 </div>
-            </div>
-            {{-- <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4"></div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"></div>
-                <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"></div>
-                <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"></div>
-                <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"></div>
-            </div> --}}
+                {{-- </div> --}}
+            @endif
         </main>
     </div>
+    @livewireScripts
 </body>
+
+{{-- @dd($chartData['labels']); --}}
+{{-- <script>
+    var chartLabels = @json($chartData['labels'] ?? null); // Pass labels
+    var chartData = @json($chartData['data'] ?? null); // Pass data
+</script> --}}
+{{-- <script src="{{ asset('js/mychart.js') }}"></script> <!-- Link to external JS --> --}}
 <script>
     window.addEventListener("load", function() {
         document.querySelector('[data-modal-toggle="defaultModal"]').click();

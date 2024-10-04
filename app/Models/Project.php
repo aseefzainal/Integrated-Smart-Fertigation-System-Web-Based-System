@@ -26,7 +26,7 @@ class Project extends Model
 
     public function latestSensors()
     {
-        return ProjectSensor::select('project_sensors.*', 'sensors.name', 'sensors.unit')
+        return ProjectSensor::select('project_sensors.*', 'sensors.name', 'sensors.unit', 'sensors.slug')
             ->join('sensors', 'project_sensors.sensor_id', '=', 'sensors.id')
             ->where('project_sensors.project_id', $this->id) // Filter by current project
             ->whereIn('project_sensors.id', function ($query) {
