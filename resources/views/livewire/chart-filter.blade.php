@@ -1,5 +1,5 @@
 <div wire:ignore
-    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-96 bg-white shadow-lg flex flex-col">
+    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[26.3rem] bg-white shadow-lg flex flex-col">
     <div class="flex items-center justify-between py-3 px-3">
         <div class="flex items-center">
             @if (isset($chartData['sensorName']))
@@ -10,7 +10,7 @@
             @endif
         </div>
         @if ($chartData['data'])
-            <button id="aseefButton" data-dropdown-toggle="aseef"
+            <button id="chartFilterButton" data-dropdown-toggle="chartFilter"
                 class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                 type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400"
@@ -26,7 +26,7 @@
                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                 </svg>
             </button>
-            <div id="aseef"
+            <div id="chartFilter"
                 class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actionsDropdownButton">
                     @foreach ($sensors as $sensor)
@@ -62,7 +62,7 @@
 </script> --}}
 @script
     <script>
-        let chart = null; // Declare a variable to hold the chart instance
+        let myChart = null; // Declare a variable to hold the chart instance
 
         // Function to initialize or update the chart
         function initOrUpdateChart() {
@@ -70,11 +70,11 @@
             const chartLabels = $wire.chartData['labels'];
             const chartData = $wire.chartData['data'];
 
-            if (chart) {
+            if (myChart) {
                 // If the chart already exists, update the data and call chart.update()
-                chart.data.labels = chartLabels;
-                chart.data.datasets[0].data = chartData;
-                chart.update(); // Update the chart
+                myChart.data.labels = chartLabels;
+                myChart.data.datasets[0].data = chartData;
+                myChart.update(); // Update the chart
             } else {
                 // Create a new chart if it doesn't exist
                 const data = {
@@ -125,7 +125,7 @@
                 };
 
                 // Create the chart and store it in the variable
-                chart = new Chart(ctx, config);
+                myChart = new Chart(ctx, config);
             }
         }
 

@@ -7,9 +7,10 @@
             {{ $controlText }}
         </span>
     </div>
+    {{-- @dump($inputs) --}}
     @if (!$inputs->isEmpty())
+    {{-- @if (!empty($inputs)) --}}
         <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
-            {{-- @dump($inputs) --}}
             @foreach ($inputs as $input)
                 {{-- @if ($input->type === 'auto') --}}
                     <div class="flex shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3 items-start">

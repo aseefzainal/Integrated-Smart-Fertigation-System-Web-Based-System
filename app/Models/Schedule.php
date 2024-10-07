@@ -19,7 +19,7 @@ class Schedule extends Model
     {
         return [
             'date' => 'date',
-            'time' => 'date'
+            'time' => 'datetime'
         ];
     }
 }
