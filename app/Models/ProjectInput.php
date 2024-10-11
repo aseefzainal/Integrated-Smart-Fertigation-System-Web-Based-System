@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectInput extends Model
 {
     use HasFactory;
+
+    protected $guarded = [
+        'id'
+    ];
 }

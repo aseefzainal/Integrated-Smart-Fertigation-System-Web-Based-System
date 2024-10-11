@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <title>Document</title>
+    @stack('styles')
 </head>
 
 <body class="bg-gray-50">
@@ -33,15 +33,28 @@
             {{ $slot }}
         </main>
     </div>
-    @livewireScripts
+
+    @stack('scripts')
     {{-- <script>
         var chartLabels = @json($chartData['labels'] ?? null); // Pass labels
         var chartData = @json($chartData['data'] ?? null); // Pass data
     </script> --}}
-    <script>
-        window.addEventListener("load", function() {
-            document.querySelector('[data-modal-toggle="defaultModal"]').click();
-        });
+
+    {{-- <script>
+    </script> --}}
+    <script data-navigate-once>
+        // window.addEventListener("load", function() {
+        //     document.querySelector('[data-dropdown-toggle="scheduleFilterDropdown"]').click();
+        // });
+        // document.addEventListener("DOMContentLoaded", function(event) {
+        //     document.getElementById('successButton').click();
+        // });
+        document.addEventListener('livewire:navigated', () => {
+            console.log('navigated');
+            initFlowbite();
+            // document.querySelector('[data-dropdown-toggle="scheduleFilterDropdown"]').click();
+            // document.getElementById('successButton').click();
+        })
     </script>
 </body>
 

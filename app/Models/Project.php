@@ -8,20 +8,30 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Project extends Model
 {
     use HasFactory;
 
+    protected $guarded = [
+        'id'
+    ];
+
     public function inputs(): BelongsToMany
     {
-        return $this->belongsToMany(Input::class, 'project_inputs')->withPivot('custom_name', 'status');
+        return $this->belongsToMany(Input::class, 'project_inputs')->withPivot('id', 'custom_name', 'status');
     }
 
     public function schedules(): HasManyThrough
     {
         return $this->hasManyThrough(Schedule::class, ProjectInput::class);
+    }
+
+    public function projectSensor(): HasMany
+    {
+        return $this->hasMany(ProjectSensor::class);
     }
 
     public function latestSensors()

@@ -5,9 +5,13 @@ namespace App\Livewire;
 use App\Models\Project;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class ScheduleFilter extends Component
 {
+    use WithPagination, WithoutUrlPagination;
+    
     public $input_id;
     public $project_id;
 
@@ -41,9 +45,10 @@ class ScheduleFilter extends Component
         ]);
     }
 
-    public function updateSchedule($input_id = null)
+    // lifecycle Hook livewire updating + input_id (nama variable di atas)
+    public function updatingInputId()
     {
-        $this->input_id = $input_id;
+        $this->resetPage();
     }
 
     #[On('projectSelected')]

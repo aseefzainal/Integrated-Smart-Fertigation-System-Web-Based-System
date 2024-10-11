@@ -1,4 +1,4 @@
-<div wire:ignore
+<div
     class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[26.3rem] bg-white shadow-lg flex flex-col">
     <div class="flex items-center justify-between py-3 px-3">
         <div class="flex items-center">
@@ -10,9 +10,15 @@
             @endif
         </div>
         @if ($chartData['data'])
+            {{-- <select wire:model="sensor_id" id="small"
+                class="block w-full md:w-auto p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                @foreach ($sensors as $sensor)
+                    <option value="{{ $sensor->sensor_id }}">{{ $sensor->name }}</option>
+                @endforeach
+            </select> --}}
             <button id="chartFilterButton" data-dropdown-toggle="chartFilter"
                 class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                type="button">
+                type="button" name="button">
                 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400"
                     viewbox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
@@ -26,13 +32,13 @@
                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                 </svg>
             </button>
-            <div id="chartFilter"
+            <div wire:ignore id="chartFilter"
                 class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actionsDropdownButton">
                     @foreach ($sensors as $sensor)
                         {{-- @dump($sensor->id) --}}
                         <li>
-                            <a wire:click="updateChart({{ $sensor->sensor_id }})"
+                            <a href="#" wire:click.prevent="$set('sensor_id', {{ $sensor->sensor_id }})"
                                 class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer">{{ $sensor->name }}</a>
                         </li>
                     @endforeach
@@ -42,7 +48,7 @@
     </div>
     {{-- @dump($chartData['data']) --}}
     @if ($chartData['data'])
-        <div class="w-full h-full pl-1">
+        <div wire:poll wire:ignore class="w-full h-full pl-1">
             <canvas id="myChart"></canvas>
         </div>
     @else
@@ -53,88 +59,94 @@
     @endif
 </div>
 
-@assets
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-@endassets
+
 {{-- <script>
     var chartLabels = @json($chartData['labels'] ?? null);
     var chartData = @json($chartData['data'] ?? null);
 </script> --}}
-@script
-    <script>
-        let myChart = null; // Declare a variable to hold the chart instance
 
-        // Function to initialize or update the chart
-        function initOrUpdateChart() {
-            const ctx = document.getElementById('myChart').getContext('2d'); // Get the canvas context
-            const chartLabels = $wire.chartData['labels'];
-            const chartData = $wire.chartData['data'];
+@if ($chartData['data'])
+    @assets
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @endassets
 
-            if (myChart) {
-                // If the chart already exists, update the data and call chart.update()
-                myChart.data.labels = chartLabels;
-                myChart.data.datasets[0].data = chartData;
-                myChart.update(); // Update the chart
-            } else {
-                // Create a new chart if it doesn't exist
-                const data = {
-                    labels: chartLabels,
-                    datasets: [{
-                        label: 'My First dataset',
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: chartData,
-                        tension: 0.4, // Set the tension to create a smooth curve
-                        fill: true, // Fill under the line
-                        borderWidth: 2,
-                    }]
-                };
+    @script
+        <script>
+            let myChart = null; // Declare a variable to hold the chart instance
 
-                // Create a gradient for the background
-                const gradient = ctx.createLinearGradient(0, 0, 0, 400); // Start at (0, 0) to (0, 400)
-                gradient.addColorStop(0, 'rgba(255, 99, 132, 1)'); // Start with red
-                gradient.addColorStop(1, 'rgba(255, 255, 255, 0.5)'); // End with white
+            // Function to initialize or update the chart
+            function initOrUpdateChart() {
+                const ctx = document.getElementById('myChart').getContext('2d'); // Get the canvas context
+                const chartLabels = $wire.chartData['labels'];
+                const chartData = $wire.chartData['data'];
 
-                // Set the gradient as the background color for the dataset
-                data.datasets[0].backgroundColor = gradient;
+                if (myChart) {
+                    // If the chart already exists, update the data and call chart.update()
+                    myChart.data.labels = chartLabels;
+                    myChart.data.datasets[0].data = chartData;
+                    myChart.update(); // Update the chart
+                } else {
+                    // Create a new chart if it doesn't exist
+                    const data = {
+                        labels: chartLabels,
+                        datasets: [{
+                            label: 'My First dataset',
+                            backgroundColor: 'rgb(255, 99, 132)',
+                            borderColor: 'rgb(255, 99, 132)',
+                            data: chartData,
+                            tension: 0.4, // Set the tension to create a smooth curve
+                            fill: true, // Fill under the line
+                            borderWidth: 2,
+                        }]
+                    };
 
-                const config = {
-                    type: 'line',
-                    data: data,
-                    options: {
-                        responsive: true, // Make the chart responsive
-                        maintainAspectRatio: false, // Allows the chart to fit in the container height
-                        plugins: {
-                            legend: {
-                                display: false // Optionally hide the entire legend
-                            }
-                        },
-                        scales: {
-                            y: {
-                                grid: {
-                                    // Optionally disable y-axis grid lines
-                                },
+                    // Create a gradient for the background
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 400); // Start at (0, 0) to (0, 400)
+                    gradient.addColorStop(0, 'rgba(255, 99, 132, 1)'); // Start with red
+                    gradient.addColorStop(1, 'rgba(255, 255, 255, 0.5)'); // End with white
+
+                    // Set the gradient as the background color for the dataset
+                    data.datasets[0].backgroundColor = gradient;
+
+                    const config = {
+                        type: 'line',
+                        data: data,
+                        options: {
+                            responsive: true, // Make the chart responsive
+                            maintainAspectRatio: false, // Allows the chart to fit in the container height
+                            plugins: {
+                                legend: {
+                                    display: false // Optionally hide the entire legend
+                                }
                             },
-                            x: {
-                                grid: {
-                                    // Optionally disable x-axis grid lines
+                            scales: {
+                                y: {
+                                    grid: {
+                                        // Optionally disable y-axis grid lines
+                                    },
+                                },
+                                x: {
+                                    grid: {
+                                        // Optionally disable x-axis grid lines
+                                    }
                                 }
                             }
                         }
-                    }
-                };
+                    };
 
-                // Create the chart and store it in the variable
-                myChart = new Chart(ctx, config);
+                    // Create the chart and store it in the variable
+                    myChart = new Chart(ctx, config);
+                }
             }
-        }
 
-        // Call the function to initialize the chart on load
-        initOrUpdateChart();
+            // Call the function to initialize the chart on load
+            initOrUpdateChart();
 
-        // Use Livewire hook to re-initialize the chart when chartData updates
-        Livewire.on('chartUpdated', () => {
-            initOrUpdateChart(); // Reinitialize the chart with updated data
-        });
-    </script>
-@endscript
+            // Use Livewire hook to re-initialize the chart when chartData updates
+            Livewire.on('chartUpdated', () => {
+                initOrUpdateChart(); // Reinitialize the chart with updated data
+            });
+        </script>
+    @endscript
+
+@endif

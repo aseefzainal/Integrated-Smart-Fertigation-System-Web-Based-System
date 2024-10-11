@@ -32,7 +32,9 @@ class ChartFilter extends Component
                 $this->sensor_id = $sensors->first()->sensor_id;
             }
 
-            $sensorReadings = ProjectSensor::where('sensor_id', $this->sensor_id)
+            // $sensorReadings = ProjectSensor::where('sensor_id', $this->sensor_id)
+            $sensorReadings = $project->projectSensor()
+                ->where('sensor_id', $this->sensor_id)
                 ->orderBy('created_at', 'desc')
                 ->take(10)
                 ->get();
@@ -57,11 +59,6 @@ class ChartFilter extends Component
         return view('livewire.chart-filter', [
             'sensors' => $sensors
         ]);
-    }
-
-    public function updateChart($sensor_id)
-    {
-        $this->sensor_id = $sensor_id;
     }
 
     #[On('projectSelected')]

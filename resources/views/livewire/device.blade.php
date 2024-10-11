@@ -16,7 +16,7 @@
             <p class="my-4">This user has no active projects. Create a new project to get started.</p>
             {{-- <p>Ready to start your first project? Contact customer support for assistance.</p> --}}
             {{-- <p>You currently have no projects. Please contact our customer support team to get started.</p> --}}
-            <button type="button"
+            <button type="button" id="create-new-project"
                 class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                 <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true">
@@ -28,7 +28,7 @@
         </div>
     @else
         <div class="flex justify-between mb-3 mt-5">
-            <button type="button"
+            <button type="button" id="create-new-project"
                 class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                 <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true">
@@ -112,7 +112,7 @@
                     <span class="text-blue-600 cursor-pointer hover:underline">Setting</span>
                 </div>
                 @if (!$sensors->isEmpty())
-                    <div class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
+                    <div wire:poll class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
                         @foreach ($sensors as $sensor)
                             <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
                                 <i class="fi fi-sr-bag-seedling text-[1.7rem] pt-2"></i>
@@ -177,6 +177,7 @@
                 @endif
             </div>
             {{-- Chart --}}
+            {{-- @livewire('chart-filter', ['project_id' => $project_id]) --}}
             @livewire('chart-filter', ['project_id' => $project_id])
             {{-- Schedule --}}
             @livewire('schedule-filter', ['project_id' => $project_id])
