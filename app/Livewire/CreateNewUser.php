@@ -97,13 +97,13 @@ class CreateNewUser extends Component
             $this->previewSensors = Sensor::whereIn('id', $this->selectedSensors)->get();
         }
 
-        // try {
+        try {
             $this->validate();
-            // $this->tab = 4;
-        // } catch (\Illuminate\Validation\ValidationException $e) {
-        //     $this->tab = 1;
-        //     $this->validate();
-        // }
+            $this->tab = 4;
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->tab = 1;
+            $this->validate();
+        }
     }
 
     public function submit()
@@ -155,8 +155,11 @@ class CreateNewUser extends Component
         }
 
         $this->reset();
+
+        session()->flash('success', 'User created successfully.');
+ 
         // Redirect to the dashboard after successful user creation
-        return redirect('/')->with('success', 'User created successfully.');
+        $this->redirect('/', navigate: true);
     }
 
     public function render()

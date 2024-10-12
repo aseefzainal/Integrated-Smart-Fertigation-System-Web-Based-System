@@ -27,7 +27,7 @@
             </button>
         </div>
     @else
-        <div class="flex justify-between mb-3 mt-5">
+        <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:justify-between mb-3 mt-5">
             <button type="button" id="create-new-project"
                 class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                 <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
@@ -100,19 +100,20 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-4">
+        {{-- <div class="grid grid-cols-2 gap-3 mb-4"> --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
             {{-- Inputs --}}
             {{-- @dump($project_id) --}}
             @livewire('input-filter', ['project_id' => $project_id])
             {{-- Sensors --}}
             <div
-                class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
+                class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 md:h-[22rem] shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
                 <div class="flex justify-between py-2 px-3 text-sm sticky top-0 bg-white z-10 shadow-sm">
                     <h3>Data Sensor</h3>
                     <span class="text-blue-600 cursor-pointer hover:underline">Setting</span>
                 </div>
                 @if (!$sensors->isEmpty())
-                    <div wire:poll class="grid grid-cols-2 gap-3 px-3 pt-2 pb-3">
+                    <div wire:poll class="grid sm:grid-cols-2 gap-3 px-3 pt-2 pb-3">
                         @foreach ($sensors as $sensor)
                             <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
                                 <i class="fi fi-sr-bag-seedling text-[1.7rem] pt-2"></i>

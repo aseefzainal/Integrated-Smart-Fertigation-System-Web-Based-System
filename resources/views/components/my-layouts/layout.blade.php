@@ -7,7 +7,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <title>Document</title>
-    @stack('styles')
+    {{-- @stack('styles') --}}
+    @livewireStyles
 </head>
 
 <body class="bg-gray-50">
@@ -34,26 +35,43 @@
         </main>
     </div>
 
-    @stack('scripts')
+    {{-- @stack('scripts') --}}
+    @livewireScripts
+
     {{-- <script>
         var chartLabels = @json($chartData['labels'] ?? null); // Pass labels
         var chartData = @json($chartData['data'] ?? null); // Pass data
     </script> --}}
 
-    {{-- <script>
-    </script> --}}
     <script data-navigate-once>
-        // window.addEventListener("load", function() {
-        //     document.querySelector('[data-dropdown-toggle="scheduleFilterDropdown"]').click();
-        // });
-        // document.addEventListener("DOMContentLoaded", function(event) {
-        //     document.getElementById('successButton').click();
-        // });
+        document.addEventListener('DOMContentLoaded', function() {
+            // document.getElementById('updateProductButton').click();
+
+            Livewire.on('showModal', () => {
+                document.querySelector('#deleteModal').style.display = 'flex';
+            });
+
+            Livewire.on('hideModal', () => {
+                document.querySelector('#deleteModal').style.display = 'none';
+            });
+            window.addEventListener('restoreSwitch', event => {
+                let switchElement = document.getElementById(`switch-${event.detail.inputId.initialValue}`);
+                // console.log(event.detail.originalStatus.initialValue);
+
+                if (switchElement) {
+                    switchElement.checked = event.detail.originalStatus
+                        .initialValue; // Restore original switch value
+                } else {
+                    console.error("Switch element not found!");
+                }
+
+                document.querySelector('#deleteModal').style.display = 'none';
+            });
+        });
+
         document.addEventListener('livewire:navigated', () => {
-            console.log('navigated');
+            // console.log('navigated');
             initFlowbite();
-            // document.querySelector('[data-dropdown-toggle="scheduleFilterDropdown"]').click();
-            // document.getElementById('successButton').click();
         })
     </script>
 </body>

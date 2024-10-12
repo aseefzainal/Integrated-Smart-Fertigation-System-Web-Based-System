@@ -1,6 +1,6 @@
 <div
     class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-[26.3rem] bg-white shadow-lg flex flex-col">
-    <div class="flex items-center justify-between py-3 px-3">
+    <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:items-center md:justify-between py-3 px-3">
         <div class="flex items-center">
             @if (isset($chartData['sensorName']))
                 <div class="w-5 h-3 bg-[rgb(255,99,132)] mr-2"></div>

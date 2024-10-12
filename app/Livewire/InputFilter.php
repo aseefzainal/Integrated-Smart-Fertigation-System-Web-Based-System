@@ -3,13 +3,41 @@
 namespace App\Livewire;
 
 use App\Models\Project;
-use Livewire\Attributes\On;
+use App\Models\ProjectInput;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 class InputFilter extends Component
 {
     public $project_id;
+    public $inputId;
+    public $originalStatus;
     public $controlType = 'auto';
+
+    // protected $listeners = ['openModal' => 'openModal'];
+
+    #[On('openModal')]
+    public function openModal($inputId)
+    {
+        $this->inputId = $inputId;
+        $input = ProjectInput::find($this->inputId);
+        $this->originalStatus = $input->status;
+        $this->dispatch('showModal');
+    }
+    
+    public function toggleStatus()
+    {
+        sleep(5);
+
+        $input = ProjectInput::find($this->inputId);
+        $input->status = !$input->status;
+        $input->save();
+        
+        // Close modal after confirming
+        $this->dispatch('hideModal');
+
+        session()->flash('success', $input->custom_name . ' has successfully ' . ($input->status == 1 ? 'turned on.' : 'turned off.'));
+    }
 
     public function mount($project_id)
     {
