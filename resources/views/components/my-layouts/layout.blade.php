@@ -31,6 +31,10 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Toast Modal --}}
+            <x-my-layouts.toast></x-my-layouts.toast>
+
             {{ $slot }}
         </main>
     </div>

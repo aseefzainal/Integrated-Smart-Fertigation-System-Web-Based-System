@@ -10,6 +10,10 @@ class Schedule extends Model
 {
     use HasFactory;
 
+    protected $guarded = [
+        'id'
+    ];
+
     public function projectInput(): BelongsTo
     {
         return $this->belongsTo(ProjectInput::class);

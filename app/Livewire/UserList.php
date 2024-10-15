@@ -30,4 +30,13 @@ class UserList extends Component
     public function updatingQuery() {
         $this->resetPage();
     }
+
+    public function delete($userId)
+    {
+        $item = User::findOrFail($userId);
+        $item->delete();
+
+        // Emit an event or show a success message (optional)
+        session()->flash('success', 'User deleted successfully!');
+    }
 }
