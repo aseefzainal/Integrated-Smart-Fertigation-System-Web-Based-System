@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('input_id')->constrained()->onDelete('cascade');
             $table->string('custom_name')->nullable();
             $table->boolean('status')->default(0);
+            $table->integer('duration')->default(0);
             $table->timestamps();
         });
     }

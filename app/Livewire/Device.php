@@ -11,6 +11,8 @@ class Device extends Component
 {
     public $user;
     public $project;
+    public $showSensorModal = false;
+    public $limitSensor;
 
     public function mount(User $user)
     {
@@ -41,5 +43,11 @@ class Device extends Component
         $this->dispatch('projectSelected', projectId: $project_id);
 
         // dump($this->project);
+    }
+
+    public function closeCrudModal()
+    {
+        // $this->reset(['hst', 'date', 'time', 'type']);
+        $this->showSensorModal = false;
     }
 }

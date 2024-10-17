@@ -17,17 +17,34 @@
         {{-- <main class="p-3 md:ml-[14.4rem] h-auto"> --}}
         <main class="p-3 md:ml-64 h-auto">
             <div class="flex justify-between items-center mb-4">
+                @php
+                    $name = explode(' ', Auth::user()->name);
+                    $name = implode(' ', array_slice($name, 0, 2));
+
+                    // Generate a random color (you can customize this logic)
+                    $colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500'];
+                    $randomColor = $colors[array_rand($colors)];
+                    // Get the user's initials
+                    $initials = strtoupper(substr(Auth::user()->name, 0, 1)); // You can add more logic for full initials
+                @endphp
                 <div>
-                    <h1 class="text-lg font-medium">Hi, Ahmad Aseef</h1>
-                    <span class="text-sm text-slate-500">Welcome to admin page</span>
+                    <h1 class="text-lg font-medium">Hi, {{ $name }}</h1>
+                    <span class="text-sm text-slate-500">Welcome to {{ Auth::user()->role }} page</span>
                 </div>
                 <div class="flex items-center">
-                    <div
-                        class="rounded-3xl bg-red-500 w-10 h-10 text-white flex justify-center items-center text-xl mr-3">
-                        A</div>
+                    @if (Auth::user()->profile_photo_path)
+                        <!-- Show the profile photo -->
+                        <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ $name }}"
+                            class="rounded-full h-8 w-8 object-cover">
+                    @else
+                        <div
+                            class="{{ $randomColor }} rounded-full w-10 h-10 text-white flex justify-center items-center text-xl mr-3">
+                            {{ $initials }}
+                        </div>
+                    @endif
                     <div>
-                        <h4>Ahmad Aseef</h4>
-                        <span class="text-sm text-slate-500">admin</span>
+                        <h4>{{ $name }}</h4>
+                        <span class="text-sm text-slate-500">{{ Auth::user()->role }}</span>
                     </div>
                 </div>
             </div>

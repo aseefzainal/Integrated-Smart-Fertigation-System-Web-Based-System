@@ -21,10 +21,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([UserSeeder::class, ProjectSeeder::class, InputSeeder::class, SensorSeeder::class]);
+        // $this->call([RoleSeeder::class, UserSeeder::class, ProjectCategorySeeder::class, ProjectSeeder::class, InputSeeder::class, SensorSeeder::class]);
 
         // User::factory(17)->create()->each(function ($user) {
-        //     Address::factory()->create(['user_id' => $user->id]);
+        //     // Address::factory()->create(['user_id' => $user->id]);
+        //     Address::factory()->create([
+        //         'addressable_id' => $user->id,
+        //         'addressable_type' => User::class, // Specify the User class for polymorphic relationship
+        //         'address_type' => 'home', // You can specify the address type if needed
+        //     ]);
         // });
 
         // $userIds = User::pluck('id')->toArray();
@@ -36,6 +41,7 @@ class DatabaseSeeder extends Seeder
         //     $project = Project::create([
         //         'user_id' => fake()->randomElement($userIds),
         //         'name' => fake()->sentence(3),
+        //         'category_id' => 1,
         //         'slug' => Str::slug(fake()->sentence(3)),
         //     ]);
             
@@ -48,22 +54,18 @@ class DatabaseSeeder extends Seeder
         //         ]);
         //     }
 
-        //     // for($j = 0; $j < 5; $j++) {
-        //     //     foreach($predefinedSensors->random(5) as $sensor) {
-        //     //         SensorReading::create([
-        //     //             'project_id' => $project->id,
-        //     //             'sensor_id' => $sensor->id,
-        //     //             'value' => rand(0, 200)
-        //     //         ]);
-        //     //     }
-        //     // }
+        //     Address::factory()->create([
+        //         'addressable_id' => $project->id,
+        //         'addressable_type' => Project::class, // Specify the User class for polymorphic relationship
+        //         'address_type' => 'site', // You can specify the address type if needed
+        //     ]);
         // }
 
         // Schedule::factory(100)->create();
 
         foreach($predefinedSensors as $sensor) {
             ProjectSensor::create([
-                'project_id' => 1,
+                'project_id' => 5,
                 'sensor_id' => $sensor->id,
                 'value' => rand(0, 200)
             ]);

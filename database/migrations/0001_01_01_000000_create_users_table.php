@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
 
             $table->string('phone', 20)->unique(); // Phone numbers can vary in length depending on region. Adjust accordingly.
-            $table->string('image')->default('user.jpg'); // Image file path as string.
+            // $table->string('image')->default('user.jpg'); // Image file path as string.
             $table->enum('role', ['admin', 'user'])->default('user');
             $table->enum('gender', ['male', 'female', 'other'])->nullable(); // Enum ensures controlled values for gender.
             $table->date('birthday')->nullable(); // Use date type instead of string for storing dates.

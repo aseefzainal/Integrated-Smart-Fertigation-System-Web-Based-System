@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // foreign key for users
-            $table->string('address_line_1'); // first line of the address
+            // $table->foreignId('user_id')->constrained()->onDelete('cascade'); // foreign key for users
+            $table->string('address_line_1')->nullable(); // first line of the address
             $table->string('address_line_2')->nullable(); // second line of the address (optional)
-            $table->string('city');
-            $table->string('state');
-            $table->string('postcode');
-            $table->string('country');
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('postcode')->nullable();
+            $table->string('country')->nullable();
+            $table->morphs('addressable'); // Polymorphic relationship
+            $table->enum('address_type', ['home', 'site']); // Address type
             $table->timestamps();
         });
     }

@@ -23,6 +23,9 @@ class AddressFactory extends Factory
             'state' => fake()->state,
             'postcode' => fake()->postcode,
             'country' => fake()->country,
+            'addressable_id' => null, // Set this to null or a default value if needed
+            'addressable_type' => null, // Set this to null or a default value if needed
+            'address_type' => $this->faker->randomElement(['home', 'site']), // Randomly assign home or site
         ];
     }
 }

@@ -16,16 +16,19 @@ class ProjectSeeder extends Seeder
         $projects = [
             [
                 'user_id' => 1,
+                'category_id' => 1,
                 'name' => 'Final Year Project',
                 'slug' => 'fyp'
             ],
             [
                 'user_id' => 2,
+                'category_id' => 1,
                 'name' => 'Telong Site',
                 'slug' => 'telong-site'
             ],
             [
                 'user_id' => 3,
+                'category_id' => 1,
                 'name' => 'Kandis Site',
                 'slug' => 'kandis-site'
             ],
