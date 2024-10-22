@@ -7,6 +7,7 @@ use App\Models\ProjectSensor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -20,9 +21,14 @@ class Project extends Model
         'id'
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function inputs(): BelongsToMany
     {
-        return $this->belongsToMany(Input::class, 'project_inputs')->withPivot('id', 'custom_name', 'status');
+        return $this->belongsToMany(Input::class, 'project_inputs')->withPivot('id', 'custom_name', 'status', 'duration');
     }
 
     public function schedules(): HasManyThrough
@@ -50,5 +56,15 @@ class Project extends Model
     public function address(): MorphOne
     {
         return $this->morphOne(Address::class, 'addressable');
+    }
+
+    public function limitSensors(): HasMany
+    {
+        return $this->hasMany(LimitSensor::class);
+    }
+
+    public function sensorNotifications(): HasMany
+    {
+        return $this->hasMany(SensorNotification::class);
     }
 }

@@ -12,6 +12,7 @@ use App\Models\Schedule;
 use Illuminate\Support\Str;
 use App\Models\ProjectInput;
 use App\Models\ProjectSensor;
+use App\Models\SensorNotification;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -70,5 +71,12 @@ class DatabaseSeeder extends Seeder
                 'value' => rand(0, 200)
             ]);
         }
+
+        // foreach($predefinedSensors as $sensor) {
+        //     SensorNotification::create([
+        //         'project_id' => 5,
+        //         'sensor_id' => $sensor->id,
+        //     ]);
+        // }
     }
 }
