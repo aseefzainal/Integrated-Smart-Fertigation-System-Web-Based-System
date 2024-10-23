@@ -2,6 +2,7 @@
 
 use App\Livewire\CreateNewUser;
 use App\Livewire\Device;
+use App\Livewire\Profile;
 use App\Livewire\UserList;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -12,9 +13,11 @@ Route::get('/', function () {
 
 Route::get('/user-list', UserList::class);
 
-Route::get('/profile/{user:username}', function (User $user) {
-    return view('profile', ['user' => $user]);
-});
+Route::get('/profile/{user:username}', Profile::class);
+
+// Route::get('/profile/{user:username}', function (User $user) {
+//     return view('profile', ['user' => $user]);
+// });
 
 Route::get('/device/{user:username}', Device::class);
 

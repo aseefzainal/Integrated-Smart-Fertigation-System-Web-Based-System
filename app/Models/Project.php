@@ -31,6 +31,11 @@ class Project extends Model
         return $this->belongsToMany(Input::class, 'project_inputs')->withPivot('id', 'custom_name', 'status', 'duration');
     }
 
+    public function category(): BelongsTo
+{
+    return $this->belongsTo(ProjectCategory::class, 'category_id');
+}
+
     public function schedules(): HasManyThrough
     {
         return $this->hasManyThrough(Schedule::class, ProjectInput::class);

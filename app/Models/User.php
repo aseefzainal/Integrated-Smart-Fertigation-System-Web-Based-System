@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -72,7 +73,6 @@ class User extends Authenticatable
     public function getRedirectRoute(): string
     {
         // return match((int)$this->role_id) {
-        // return match((int)$this->role) {
         return match ($this->role) {
             'admin' => 'user-list',
             'user' => 'device/' . $this->username,
@@ -80,11 +80,34 @@ class User extends Authenticatable
         };
     }
 
-    // public function address(): HasOne
-    // {
-    //     return $this->hasOne(Address::class);
-    // }
+    // Correct relationship with the 'settings' table, through the 'user_settings' pivot table
+    public function settings(): BelongsToMany
+    {
+        return $this->belongsToMany(Setting::class, 'user_settings')
+                    ->withPivot('value'); // 'value' is the custom field in the pivot table
+    }
 
+    // Event to handle default settings on user creation
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            // Fetch all default settings
+            $settings = Setting::all();
+
+            // Loop through each setting and attach it to the user with default values
+            foreach ($settings as $setting) {
+                $defaultValue = $setting->default_value;
+
+                // Ensure notifications are stored as JSON if necessary
+                if ($setting->name === 'notifications') {
+                    $defaultValue = json_encode($defaultValue);
+                }
+
+                // Attach the setting with the default value to the user
+                $user->settings()->attach($setting->id, ['value' => $defaultValue]);
+            }
+        });
+    }
     public function address(): MorphOne
     {
         return $this->morphOne(Address::class, 'addressable');

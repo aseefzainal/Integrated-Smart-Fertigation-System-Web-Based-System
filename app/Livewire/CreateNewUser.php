@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Input;
 use App\Models\Sensor;
 use App\Models\Project;
+use App\Models\ProjectCategory;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Models\ProjectInput;
@@ -20,6 +21,8 @@ class CreateNewUser extends Component
     public $tab = 1;
     public $previewInputs = [];
     public $previewSensors = [];
+    public $addressParts = [];
+    public $address;
 
     #[Validate('nullable')]
     public $title;
@@ -51,7 +54,7 @@ class CreateNewUser extends Component
     #[Validate('nullable|string|max:255')]
     public $line2;
 
-    #[Validate('nullable|integer|max:5')]
+    #[Validate('nullable|integer|min:10000|max:99999')]
     public $postcode;
 
     #[Validate('nullable|string|max:100')]
@@ -68,6 +71,15 @@ class CreateNewUser extends Component
 
     #[Validate('')]
     public $selectedSensors = []; // For selected sensors
+
+    public function updatedPhone()
+    {
+        // Check if the phone starts with '0' (local format without country code)
+        if (substr($this->phone, 0, 1) === '0') {
+            // Add country code (+60) to the phone number
+            $this->phone = preg_replace('/^0/', '+60', $this->phone);
+        }
+    }
 
     public function createUniqueSlug($name, $class, $field)
     {
@@ -88,12 +100,44 @@ class CreateNewUser extends Component
 
     public function saveAndPreview()
     {
-        if(!empty($this->selectedInputs)) {
+        if (!empty($this->selectedInputs)) {
             $this->previewInputs = Input::whereIn('id', $this->selectedInputs)->get();
-            dump($this->previewInputs);
+            // dump($this->previewInputs);
         }
 
-        if(!empty($this->selectedSensors)) {
+        // Initialize an empty array to hold the address parts
+        $addressParts = [];
+
+        // Check if each part of the address is not null or empty and add it to the array
+        if (!empty($this->line1)) {
+            $addressParts[] = $this->line1;
+        }
+        if (!empty($this->line2)) {
+            $addressParts[] = $this->line2;
+        }
+        if (!empty($this->postcode)) {
+            $addressParts[] = $this->postcode;
+        }
+        if (!empty($this->city)) {
+            $addressParts[] = $this->city;
+        }
+        if (!empty($this->state)) {
+            $addressParts[] = $this->state;
+        }
+        if (!empty($this->country)) {
+            $addressParts[] = $this->country;
+        }
+
+        // Join the non-empty parts with a comma
+        $this->address = implode(', ', $addressParts);
+
+        // Optionally, you can check if the address is still empty after this
+        if (empty($this->address)) {
+            // Handle the case where no address parts are available
+            $this->address = 'No address available';
+        }
+
+        if (!empty($this->selectedSensors)) {
             $this->previewSensors = Sensor::whereIn('id', $this->selectedSensors)->get();
         }
 
@@ -114,7 +158,7 @@ class CreateNewUser extends Component
             'title' => $this->title,
             'name' => $this->name,
             'email' => $this->email,
-            'phone' => '+6' . $this->phone,
+            'phone' => $this->phone,
             'username' => $this->createUniqueSlug($this->name, User::class, 'username'),
             'role' => $this->role,
             'email_verified_at' => $this->verification,
@@ -125,6 +169,7 @@ class CreateNewUser extends Component
         if ($this->project_name != null) {
             $Project = Project::create([
                 'user_id' => $user->id,
+                'category_id' => $this->category,
                 'name' => $this->project_name,
                 'slug' => $this->createUniqueSlug($this->project_name, Project::class, 'slug'),
             ]);
@@ -157,14 +202,15 @@ class CreateNewUser extends Component
         $this->reset();
 
         session()->flash('success', 'User created successfully.');
- 
+
         // Redirect to the dashboard after successful user creation
-        $this->redirect('/', navigate: true);
+        $this->redirect('/user-list', navigate: true);
     }
 
     public function render()
     {
         return view('livewire.create-new-user', [
+            'projectCategories' => ProjectCategory::all(),
             'inputs' => Input::all(),
             'sensors' => Sensor::all()
         ]);

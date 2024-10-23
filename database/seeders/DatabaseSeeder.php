@@ -22,9 +22,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([RoleSeeder::class, UserSeeder::class, ProjectCategorySeeder::class, ProjectSeeder::class, InputSeeder::class, SensorSeeder::class]);
+        // $this->call([
+        //     SettingSeeder::class,
+        //     RoleSeeder::class,
+        //     UserSeeder::class,
+        //     ProjectCategorySeeder::class,
+        //     ProjectSeeder::class,
+        //     InputSeeder::class,
+        //     SensorSeeder::class,
+        // ]);
 
-        // User::factory(17)->create()->each(function ($user) {
+        // User::factory(6)->create()->each(function ($user) {
         //     // Address::factory()->create(['user_id' => $user->id]);
         //     Address::factory()->create([
         //         'addressable_id' => $user->id,
@@ -45,7 +53,7 @@ class DatabaseSeeder extends Seeder
         //         'category_id' => 1,
         //         'slug' => Str::slug(fake()->sentence(3)),
         //     ]);
-            
+
         //     foreach ($predefinedInputs as $input) {
         //         ProjectInput::create([
         //             'project_id' => $project->id,

@@ -135,8 +135,10 @@
                         <select wire:model.live="category" id="category"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="">Select Category</option>
-                            <option value="Smart Fertigation System">Smart Fertigation System</option>
-                            <option value="Perternakan Lembu">Perternakan Lembu</option>
+                            @foreach ($projectCategories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                            {{-- <option value="Perternakan Lembu">Perternakan Lembu</option> --}}
                         </select>
                         @error('category')
                             <span class="text-red-600 text-xs">{{ $message }}</span>
@@ -256,7 +258,7 @@
                     </div>
                     <div class="w-full">
                         <span class="block mb-1 text-sm font-medium text-gray-500 dark:text-white">Phone Number </span>
-                        <p class="text-sm text-gray-900">+6{{ $phone }}</p>
+                        <p class="text-sm text-gray-900">{{ $phone }}</p>
                     </div>
                     <div class="w-full">
                         <span class="block mb-1 text-sm font-medium text-gray-500 dark:text-white">User Role </span>
@@ -264,12 +266,8 @@
                     </div>
                     <div class="w-full">
                         <span class="block mb-1 text-sm font-medium text-gray-500 dark:text-white">Email Status </span>
-                        <p class="text-sm text-gray-900">{{ $verification }}</p>
+                        <p class="text-sm text-gray-900">{{ $verification ?? 'Not Verified' }}</p>
                     </div>
-                    {{-- <div class="w-full">
-                        <span class="block mb-1 text-sm font-medium text-gray-500 dark:text-white">Password </span>
-                        <p class="text-sm text-gray-900">{{ $password }}</p>
-                    </div> --}}
                     <h2 class="sm:col-span-2 text-xl font-bold text-gray-900 dark:text-white">Project Information</h2>
                     @if (!empty($project_name))
                         <div class="w-full">
@@ -279,18 +277,16 @@
                         </div>
                         <div class="w-full">
                             <span class="block mb-1 text-sm font-medium text-gray-500 dark:text-white">Category </span>
-                            <p class="text-sm text-gray-900">{{ $category }}</p>
+                            <p class="text-sm text-gray-900">{{ $category->name }}</p>
                         </div>
                         <div class="w-full">
                             <span class="block mb-1 text-sm font-medium text-gray-500 dark:text-white">Address </span>
-                            {{-- <p class="text-sm text-gray-900">No. 137, Jalan Chabang Empat Meranti, Kampung Chabang Empat,
-                            16210 Tumpat, Kelantan, Malaysia</p> --}}
                             <p class="text-sm text-gray-900">
-                                {{ $line1 . ', ' . $line2 . ', ' . $postcode . ', ' . $city . ', ' . $state . ', ' . $country }}
+                                {{ $address ?? '' }}
                             </p>
                         </div>
                     @else
-                        <div>No project configuration</div>
+                        <p class="text-sm text-gray-900">No project configuration</p>
                     @endif
                     <h2 class="sm:col-span-2 text-xl font-bold text-gray-900 dark:text-white">Input Selected</h2>
                     <div class="sm:col-span-2 grid gap-4 sm:grid-cols-4 sm:gap-2">
@@ -328,7 +324,7 @@
                             <kbd
                                 class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">{{ $previewInput->name }}</kbd>
                         @empty
-                            <div>No Input Selected</div>
+                            <p class="text-sm text-gray-900">No Input Selected</p>
                         @endforelse
                     </div>
 
@@ -393,7 +389,7 @@
                                 class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-green-100 border border-green-800 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">Water
                                 Irrigation</kbd>
                         @empty
-                            <div>No Sensor Selected</div>
+                            <p class="text-sm text-gray-900">No Sensor Selected</p>
                         @endforelse
                     </div>
                 </div>
