@@ -16,15 +16,15 @@ class SettingSeeder extends Seeder
         $settings = [
             [
                 'name' => 'theme',
-                'default_value' => 'light'
+                'default_value' => 'light',
             ],
             [
                 'name' => 'sensor_notification',
                 'default_value' => json_encode([
-                    'sms' => false,
-                    'telegram' => false,
-                    'whatsapp' => true,
-                    'email' => false,  // Default to email enabled
+                    ['name' => 'SMS', 'status' => false, 'category' => 'pay', 'price' => 'RM0.20/sms'],
+                    ['name' => 'WhatsApp', 'status' => false, 'category' => 'pay', 'price' => 'RM5.00/month'],
+                    ['name' => 'Telegram', 'status' => true, 'category' => 'free', 'price' => 'RM0.00/-'],
+                    ['name' => 'Email', 'status' => false, 'category' => 'free', 'price' => 'RM0.00/-'],
                 ]),
             ],
         ];

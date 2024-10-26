@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
 
         foreach($predefinedSensors as $sensor) {
             ProjectSensor::create([
-                'project_id' => 5,
+                'project_id' => 44,
                 'sensor_id' => $sensor->id,
                 'value' => rand(0, 200)
             ]);
@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
 
         // foreach($predefinedSensors as $sensor) {
         //     SensorNotification::create([
-        //         'project_id' => 5,
+        //         'project_id' => 44,
         //         'sensor_id' => $sensor->id,
         //     ]);
         // }
