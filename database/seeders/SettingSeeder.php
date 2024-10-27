@@ -19,6 +19,10 @@ class SettingSeeder extends Seeder
                 'default_value' => 'light',
             ],
             [
+                'name' => 'countdown',
+                'default_value' => 5
+            ],
+            [
                 'name' => 'sensor_notification',
                 'default_value' => json_encode([
                     ['name' => 'SMS', 'status' => false, 'category' => 'pay', 'price' => 'RM0.20/sms'],

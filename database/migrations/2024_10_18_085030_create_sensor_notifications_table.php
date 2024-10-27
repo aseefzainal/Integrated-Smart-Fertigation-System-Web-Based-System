@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('sensor_id')->constrained()->onDelete('cascade');
             $table->integer('value')->nullable();
-            $table->integer('countdown')->default(5);
             $table->boolean('is_sent')->default(false);
             $table->timestamps();
         });

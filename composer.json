@@ -10,7 +10,8 @@
         "laravel/jetstream": "^5.2",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.0"
+        "livewire/livewire": "^3.0",
+        "php-mqtt/laravel-client": "^1.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

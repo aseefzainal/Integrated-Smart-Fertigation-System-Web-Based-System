@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\User;
+use App\Models\Setting;
 use Livewire\Component;
 use App\Models\LimitSensor;
+use App\Models\UserSetting;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use App\Models\SensorNotification;
@@ -61,9 +63,19 @@ class Device extends Component
                 ['id' => $sensorId],  // This is the condition to find the existing record
                 [
                     'value' => $value,
-                    'countdown' => $this->countdown
+                    // 'countdown' => $this->countdown
                 ]
             );
+
+            // Retrieve the 'countdown' setting by name
+            $countdownSetting = Setting::where('name', 'countdown')->first();
+
+            if ($countdownSetting) {
+                // $newValue = 10; // Replace with the new value you want for the countdown
+
+                // Update the pivot value for only the countdown setting
+                $this->user->settings()->updateExistingPivot($countdownSetting->id, ['value' => $this->countdown]);
+            }
         }
 
         foreach ($this->limitSensorValues as $sensorId => $value) {
@@ -111,7 +123,13 @@ class Device extends Component
             }
 
             if (!isset($this->countdown)) {
-                $this->countdown = $sensorNotifications[0]->countdown;
+                // $this->countdown = $sensorNotifications[0]->countdown;
+
+                $setting = Setting::where('name', 'countdown')->first();
+                
+                // $user->settings()->updateExistingPivot($setting->id, ['value' => $this->countdown]);
+                $countdown = UserSetting::where('user_id', $this->user->id)->where('setting_id', $setting->id)->first();
+                $this->countdown = $countdown->value;
             }
         }
 

@@ -45,7 +45,7 @@
         @if ($tab === 1)
             <h3 class="font-bold mb-3 text-lg">Basics</h3>
             <div class="grid grid-cols-2 sm:grid-cols-3 py-6 border-t-2">
-                <h3 class="font-mediums col-span-2 sm:col-span-1 mb-1 sm:mb-0">Photo</h3>
+                <h3 class="font-medium col-span-2 sm:col-span-1 mb-1 sm:mb-0">Photo</h3>
                 @php
                     $name = explode(' ', Auth::user()->name);
                     $name = implode(' ', array_slice($name, 0, 2));

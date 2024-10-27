@@ -2,10 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Models\Input;
+use App\Models\Sensor;
 use App\Models\Project;
-use App\Models\ProjectInput;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\ProjectInput;
+use PhpMqtt\Client\Facades\MQTT;
+use Illuminate\Support\Facades\Log;
 
 class InputFilter extends Component
 {
@@ -36,10 +40,48 @@ class InputFilter extends Component
         $input->status = !$input->status;
         $input->save();
 
+        $inputSlug = Input::find($input->input_id);
+
+        if ($inputSlug->slug === 'fertilizer-irrigation') {
+            $project = Project::find($this->project_id);
+            $sensor = Sensor::where('slug', 'ec')->first();
+
+            // Fetch the limit sensor for the project and sensor
+            $limitSensor = $project->limitSensors()->where('sensor_id', $sensor->id)->first();
+
+            if ($limitSensor) {
+                $limitSensorValue = $limitSensor->value;
+
+                // Publish the updated status to MQTT
+                $this->publishStatusToMQTT($this->inputId, $input->status, $input->duration, $limitSensorValue);
+            }
+        } else {
+            $this->publishStatusToMQTT($this->inputId, $input->status, $input->duration);
+        }
+
         // Close modal after confirming
         $this->dispatch('hideModal');
 
         session()->flash('success', $input->custom_name . ' has successfully ' . ($input->status == 1 ? 'turned on.' : 'turned off.'));
+    }
+
+    protected function publishStatusToMQTT($inputId, $status, $duration, $limitSensorValue = null)
+    {
+        // Assuming you have a MQTT connection method or service
+        try {
+            $mqtt = MQTT::connection();
+            $topic = "switch-button"; // Set your topic here
+            $message = json_encode(['inputId' => $inputId, 'status' => $status, 'duration' => $duration, 'limitSensor' => $limitSensorValue]);
+
+            // Publish the status
+            $mqtt->publish($topic, $message);
+
+            // Disconnect from the MQTT broker
+            $mqtt->disconnect();
+        } catch (\Exception $e) {
+            // Handle connection errors or any other exceptions
+            Log::error("MQTT Publish Error: " . $e->getMessage());
+        }
     }
 
     public function messages()

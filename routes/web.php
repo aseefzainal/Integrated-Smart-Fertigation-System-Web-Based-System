@@ -5,7 +5,6 @@ use App\Livewire\Device;
 use App\Livewire\Profile;
 use App\Livewire\Setting;
 use App\Livewire\UserList;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
