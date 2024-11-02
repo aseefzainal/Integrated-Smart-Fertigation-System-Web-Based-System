@@ -275,7 +275,7 @@
                                 class="{{ $isFirstFreeNotification ? 'pb-3 border-b-2' : 'pt-3' }} flex items-center justify-between">
                                 <div class="flex items-center">
                                     <div class="border-[3px] border-black p-2 rounded-full">
-                                        @if ($sensorNotification['name'] === 'WhatsApp')
+                                        @if ($sensorNotification['name'] === 'SMS')
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6"
                                                 viewBox="0 0 24 24"
                                                 style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">

@@ -22,18 +22,6 @@ class ProjectSensor extends Model
 
             // Check if the sensor exists
             if ($sensor) {
-                // Create SensorNotification if it doesn't exist
-                $sensorNotificationExists = SensorNotification::where('project_id', $projectSensor->project_id)
-                    ->where('sensor_id', $sensor->id)
-                    ->exists();
-
-                if (!$sensorNotificationExists) {
-                    SensorNotification::create([
-                        'project_id' => $projectSensor->project_id,
-                        'sensor_id' => $projectSensor->sensor_id,
-                    ]);
-                }
-
                 // If the sensor slug is 'ec', check and create LimitSensor
                 if ($sensor->slug == 'ec') {
                     // Check if the LimitSensor already exists

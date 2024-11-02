@@ -52,6 +52,25 @@
             {{-- Toast Modal --}}
             <x-my-layouts.toast></x-my-layouts.toast>
             
+            {{-- <div class="grid grid-cols-2 gap-3 mb-4 w-1/2 text-gray-900">
+                <div class="rounded-lg bg-white p-3 shadow-md cursor-pointer hover:bg-slate-100 border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <h4 class="text-sm mb-1">Total Users</h4>
+                    <span class="text-2xl">5</span>
+                </div>
+                <div class="rounded-lg bg-white p-3 shadow-md cursor-pointer hover:bg-slate-100 border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <h4 class="text-sm mb-1">Total Projects</h4>
+                    <span class="text-2xl">4</span>
+                </div>
+                <div class="rounded-lg bg-white p-3 shadow-md cursor-pointer hover:bg-slate-100 border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <h4 class="text-sm mb-1">Total Bill</h4>
+                    <span class="text-2xl">RM100.00</span>
+                </div>
+                <div class="rounded-lg bg-white p-3 shadow-md cursor-pointer hover:bg-slate-100 border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <h4 class="text-sm mb-1">Total Users</h4>
+                    <span class="text-2xl">5</span>
+                </div>
+            </div> --}}
+
             {{ $slot }}
     
             <x-my-layouts.footer></x-my-layouts.footer>

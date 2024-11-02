@@ -88,15 +88,17 @@ class ScheduleFilter extends Component
 
             $inputDate = Carbon::parse($this->date);
 
-            if ($listHST) {
+            if ($listHST && $this->date) {
                 $difference = $listHST->date->diffInDays($inputDate);
 
                 $hst = explode('-', trim($listHST->hst));
 
                 $this->generatorHST = $hst[1] + $difference;
                 $this->hst = $this->generatorHST;
-            } else {
+            } else if(!$listHST && $this->date) {
                 $this->hst = 1;
+            } else {
+                $this->hst = 0;
             }
         }
 

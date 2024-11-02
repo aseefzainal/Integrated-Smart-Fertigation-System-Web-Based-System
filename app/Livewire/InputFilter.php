@@ -53,10 +53,10 @@ class InputFilter extends Component
                 $limitSensorValue = $limitSensor->value;
 
                 // Publish the updated status to MQTT
-                $this->publishStatusToMQTT($this->inputId, $input->status, $input->duration, $limitSensorValue);
+                $this->publishStatusToMQTT($this->inputId, $inputSlug->slug, $input->status, $input->duration, $limitSensorValue);
             }
         } else {
-            $this->publishStatusToMQTT($this->inputId, $input->status, $input->duration);
+            $this->publishStatusToMQTT($this->inputId, $inputSlug->slug, $input->status, $input->duration);
         }
 
         // Close modal after confirming
@@ -65,13 +65,13 @@ class InputFilter extends Component
         session()->flash('success', $input->custom_name . ' has successfully ' . ($input->status == 1 ? 'turned on.' : 'turned off.'));
     }
 
-    protected function publishStatusToMQTT($inputId, $status, $duration, $limitSensorValue = null)
+    protected function publishStatusToMQTT($inputId, $inputSlug, $status, $duration, $limitSensorValue = null)
     {
         // Assuming you have a MQTT connection method or service
         try {
             $mqtt = MQTT::connection();
             $topic = "switch-button"; // Set your topic here
-            $message = json_encode(['inputId' => $inputId, 'status' => $status, 'duration' => $duration, 'limitSensor' => $limitSensorValue]);
+            $message = json_encode(['inputId' => $inputId, 'slug' => $inputSlug, 'status' => $status, 'duration' => $duration, 'limitSensor' => $limitSensorValue]);
 
             // Publish the status
             $mqtt->publish($topic, $message);

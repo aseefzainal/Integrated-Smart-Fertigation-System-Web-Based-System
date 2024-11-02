@@ -1,6 +1,6 @@
 <div>
     <x-my-layouts.toast></x-my-layouts.toast>
-    
+
     @if ($projects->isEmpty())
         <div
             class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4 flex flex-col justify-center items-center mt-5">
@@ -183,20 +183,21 @@
                             <div class="grid gap-4 mb-4 sm:grid-cols-2">
                                 @foreach ($limitSensors as $limitSensor)
                                     <div class="sm:col-span-2">
-                                        <label for="limitSensor_{{ $limitSensor->id }}"
-                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $limitSensor->sensor->name }}
+                                        {{-- <label for="limitSensor_{{ $limitSensor->id }}" --}}
+                                        <label for="limitSensor_{{ $limitSensor['id'] }}"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $limitSensor['sensor']['name'] }}
                                             (Limit)
                                             for fertilizer irrigation</label>
                                         <div class="flex items-center">
-                                            <input type="number" name="limitSensor_{{ $limitSensor->id }}"
-                                                wire:model.live="limitSensorValues.{{ $limitSensor->id }}"
-                                                id="limitSensor_{{ $limitSensor->id }}"
+                                            <input type="number" name="limitSensor_{{ $limitSensor['id'] }}"
+                                                wire:model.live="limitSensorValues.{{ $limitSensor['id'] }}"
+                                                id="limitSensor_{{ $limitSensor['id'] }}"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-s-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                                 placeholder="0">
                                             <span
-                                                class="py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-50 border border-s-0 border-gray-300 rounded-e-lg">{{ $limitSensor->sensor->unit }}</span>
+                                                class="py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-50 border border-s-0 border-gray-300 rounded-e-lg">{{ $limitSensor['sensor']['unit'] }}</span>
                                         </div>
-                                        @error('limitSensorValues.' . $limitSensor->id)
+                                        @error('limitSensorValues.' . $limitSensor['id'])
                                             <span class="text-red-600 text-xs">{{ $message }}</span>
                                         @enderror
                                         <p id="helper-text-explanation"
@@ -219,7 +220,7 @@
                                             <option value="seconds">Seconds</option>
                                         </select> --}}
                                         <span
-                                                class="py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-50 border border-r-0 border-gray-300 rounded-l-lg">Minutes</span>
+                                            class="py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-50 border border-r-0 border-gray-300 rounded-l-lg">Minutes</span>
                                         <input type="number" wire:model.live="countdown" id="countdown"
                                             class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                             placeholder="Countdown" />
@@ -231,17 +232,79 @@
                                         class="mt-2 text-sm text-gray-500 dark:text-gray-400">Note: The countdown sets
                                         the timing for your first and subsequent notifications to prevent spam.</p>
                                 </div>
-                                @foreach ($sensorNotifications as $sensorNotification)
+                                <div
+                                    class="sm:col-span-2 flex items-center justify-between rounded-lg border border-gray-300 p-2">
+                                    <h3 class="text-sm font-medium text-gray-900 dark:text-white">List Sensor
+                                        Notification</h3>
+                                    <div class="flex justify-end space-x-2 w-2/3">
+                                        @if ($showSelectBox)
+                                            <select id="countries" wire:model="selectedSensor"
+                                                class="w-3/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option selected>Choose sensor</option>
+                                                @foreach ($sensors->whereNotIn('sensor_id', $sensorNotifications->pluck('sensor_id')) as $sensor)
+                                                    <option value="{{ $sensor->sensor_id }}">
+                                                        {{ $sensor->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        @endif
+                                        <div wire:click="{{ $showSelectBox ? 'addSensor' : '$toggle("showSelectBox")' }}"
+                                            class="cursor-pointer md:w-auto flex items-center justify-center text-sm font-medium text-gray-900 focus:outline-none {{ $showSelectBox ? 'p-1 bg-green-400 hover:bg-green-500 border-black' : 'p-2 bg-gray-50 hover:bg-gray-100 border-gray-300' }} rounded-lg border hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                            @if ($showSelectBox)
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="size-7"
+                                                    viewBox="0 0 24 24"
+                                                    style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                                    <path
+                                                        d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z">
+                                                    </path>
+                                                </svg>
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                    fill="currentColor" class="size-5">
+                                                    <path fill-rule="evenodd"
+                                                        d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <p id="helper-text-explanation"
+                                    class="sm:col-span-2 -mt-2 text-sm text-gray-500 dark:text-gray-400">Note: The
+                                    countdown sets
+                                    the timing for your first and subsequent notifications to prevent spam.</p>
+                                @foreach ($sensorNotifications as $index => $sensorNotification)
                                     <div>
-                                        <label for="sensorNotification_{{ $sensorNotification->id }}"
-                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $sensorNotification->sensor->name }}</label>
-                                        <input type="number" name="sensorNotification_{{ $sensorNotification->id }}"
+                                        {{-- <label for="sensorNotification_{{ $sensorNotification->id }}" --}}
+                                        <label for="sensorNotification_{{ $sensorNotification['id'] }}"
+                                            {{-- class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $sensorNotification->sensor->name }}</label> --}}
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $sensorNotification['sensor']['name'] }}</label>
+                                        {{-- <input type="number" name="sensorNotification_{{ $sensorNotification->id }}"
                                             id="sensorNotification_{{ $sensorNotification->id }}"
                                             wire:model.live="sensorNotificationValues.{{ $sensorNotification->id }}"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                            @error('sensorNotificationValues.' . $sensorNotification->id)
-                                                <span class="text-red-600 text-xs">{{ $message }}</span>
-                                            @enderror
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"> --}}
+
+                                        <div class="flex items-center">
+                                            <input type="number"
+                                                name="sensorNotification_{{ $sensorNotification->id }}"
+                                                wire:model.live="sensorNotificationValues.{{ $sensorNotification['id'] }}"
+                                                id="sensorNotification_{{ $sensorNotification['id'] }}"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-s-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                placeholder="0">
+                                            <span wire:click="removeSensor({{ $sensorNotification['id'] }})"
+                                                class="cursor-pointer p-2.5 text-sm font-medium text-center text-gray-900 bg-red-600 hover:bg-red-700 border border-s-0 border-gray-300 rounded-e-lg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                    fill="currentColor" class="size-5 text-white">
+                                                    <path fill-rule="evenodd"
+                                                        d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </span>
+                                        </div>
+
+                                        @error('sensorNotificationValues.' . $sensorNotification['id'])
+                                            <span class="text-red-600 text-xs">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 @endforeach
                             </div>
@@ -291,6 +354,7 @@
                 <div class="flex items-center justify-between py-2 px-3 text-sm sticky top-0 bg-white z-10 shadow-sm">
                     <h3 class="text-base">Data Sensor</h3>
                     @if (!$sensorNotifications->isEmpty() || !$limitSensors->isEmpty())
+                    {{-- @if (!empty($sensorNotifications) || !empty($limitSensors)) --}}
                         {{-- <span class="text-blue-600 cursor-pointer hover:underline"
                             wire:click="$set('showSensorModal', true)">Setting</span> --}}
                         <div wire:click="$set('showSensorModal', true)"
