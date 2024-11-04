@@ -2,14 +2,13 @@
 
 namespace App\Livewire;
 
-use App\Models\Input;
-use App\Models\Sensor;
 use App\Models\Project;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\ProjectInput;
 use PhpMqtt\Client\Facades\MQTT;
 use Illuminate\Support\Facades\Log;
+use App\Services\MQTTPublishService;
 
 class InputFilter extends Component
 {
@@ -20,8 +19,6 @@ class InputFilter extends Component
     public $tab = 1;
     public $inputValues = [];
     public $controlType = 'auto';
-
-    // protected $listeners = ['openModal' => 'openModal'];
 
     #[On('openModal')]
     public function openModal($inputId)
@@ -34,29 +31,16 @@ class InputFilter extends Component
 
     public function toggleStatus()
     {
-        sleep(5);
+        // sleep(5);
 
         $input = ProjectInput::find($this->inputId);
         $input->status = !$input->status;
         $input->save();
 
-        $inputSlug = Input::find($input->input_id);
-
-        if ($inputSlug->slug === 'fertilizer-irrigation') {
-            $project = Project::find($this->project_id);
-            $sensor = Sensor::where('slug', 'ec')->first();
-
-            // Fetch the limit sensor for the project and sensor
-            $limitSensor = $project->limitSensors()->where('sensor_id', $sensor->id)->first();
-
-            if ($limitSensor) {
-                $limitSensorValue = $limitSensor->value;
-
-                // Publish the updated status to MQTT
-                $this->publishStatusToMQTT($this->inputId, $inputSlug->slug, $input->status, $input->duration, $limitSensorValue);
-            }
-        } else {
-            $this->publishStatusToMQTT($this->inputId, $inputSlug->slug, $input->status, $input->duration);
+        if ($input) {
+            // Resolve MQTTPublishService instance and call the method
+            $mqttService = app(MQTTPublishService::class);
+            $mqttService->publishInputStatus($input);
         }
 
         // Close modal after confirming

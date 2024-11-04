@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('hst');
             $table->date('date');
             $table->time('time');
-            $table->boolean('status')->default(0);
+            $table->integer('status')->default(0);
             $table->integer('duration')->default(0);
             $table->timestamps();
         });

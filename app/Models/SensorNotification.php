@@ -18,4 +18,9 @@ class SensorNotification extends Model
     {
         return $this->belongsTo(Sensor::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

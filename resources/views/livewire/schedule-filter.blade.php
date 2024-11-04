@@ -331,8 +331,27 @@
                                         <td class="px-4 py-3">
                                             {{ $schedule->time->format('g:i A') }}
                                         </td>
-                                        <td class="px-4 py-3"><span
-                                                class="rounded-xl {{ $schedule->status == 1 ? 'border-green-400' : 'border-yellow-400' }} border-[1px] py-1 px-3 {{ $schedule->status == 1 ? 'text-green-400' : 'text-yellow-400' }}">{{ $schedule->status == 1 ? 'Success' : 'Pending' }}</span>
+                                        @php
+                                            if ($schedule->status == 0) {
+                                                $status = 'Pending';
+                                                $borderColor = 'border-yellow-400';
+                                                $textColor = 'text-yellow-400';
+                                            } elseif ($schedule->status == 1) {
+                                                $status = 'Processing...';
+                                                $borderColor = 'border-blue-400';
+                                                $textColor = 'text-blue-400';
+                                            } elseif ($schedule->status == 2) {
+                                                $status = 'Completed';
+                                                $borderColor = 'border-green-400';
+                                                $textColor = 'text-green-400';
+                                            } else {
+                                                $status = 'Overdue';
+                                                $borderColor = 'border-red-400';
+                                                $textColor = 'text-red-400';
+                                            }
+                                        @endphp
+                                        <td class="px-4 py-3"><span {{-- class="rounded-xl {{ $schedule->status == 1 ? 'border-green-400' : 'border-yellow-400' }} border-[1px] py-1 px-3 {{ $schedule->status == 1 ? 'text-green-400' : 'text-yellow-400' }}">{{ $schedule->status == 1 ? 'Success' : 'Pending' }}</span> --}}
+                                                class="rounded-xl {{ $borderColor}} border-[1px] py-1 px-3 {{ $textColor }}">{{ $status }}</span>
                                         </td>
                                         <td class="px-4 py-3 flex items-center justify-end">
                                             <button id="{{ $schedule->id }}-dropdown-button"

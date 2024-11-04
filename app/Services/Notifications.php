@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Setting;
+use App\Models\SensorNotification;
 use Illuminate\Support\Facades\Http;
 
 // class SmsService {
@@ -64,5 +66,29 @@ class Notifications
         }
 
         return $response; // Consider returning the response for further handling
+    }
+
+    public function ResetNotification()
+    {
+        $notifications = SensorNotification::where('is_sent', 1)->get();
+
+        if ($notifications->isNotEmpty()) {
+            $countdownSetting = Setting::where('name', 'countdown')->first();
+
+            foreach ($notifications as $notification) {
+                $countdown = $notification->user->settings()->where('setting_id', $countdownSetting->id)->first();
+                // $countdown = UserSetting::where('setting_id', $countdownSetting->id)->first();
+                $durationInMinutes = $countdown->pivot->value;
+
+                $timeElapsed = now()->diffInMinutes($notification->updated_at) * -1; // or updated_at, based on your logic
+
+                // Check if the elapsed time is greater than or equal to the duration
+                if ($timeElapsed >= $durationInMinutes) {
+                    // Update is_sent to true, since the countdown has completed
+                    $notification->is_sent = false;
+                    $notification->save();
+                }
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sensor_notifications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('sensor_id')->constrained()->onDelete('cascade');
             $table->integer('value')->nullable();

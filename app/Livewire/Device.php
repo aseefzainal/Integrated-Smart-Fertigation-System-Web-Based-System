@@ -78,7 +78,8 @@ class Device extends Component
         if($this->selectedSensor != null) {
             // Create a new instance of the model
             $item = SensorNotification::create([
-                'project_id' => $this->project ->id,
+                'user_id' => $this->user->id,
+                'project_id' => $this->project->id,
                 'sensor_id' => $this->selectedSensor,
                 'value' => 0
             ]);
