@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Inputs;
 
 use App\Models\Project;
 use Livewire\Component;
@@ -20,13 +20,19 @@ class InputFilter extends Component
     public $inputValues = [];
     public $controlType = 'auto';
 
-    #[On('openModal')]
+    #[On('showWarningModal')]
     public function openModal($inputId)
     {
         $this->inputId = $inputId;
         $input = ProjectInput::find($this->inputId);
         $this->originalStatus = $input->status;
+
         $this->dispatch('showModal');
+    }
+
+    public function closeModal($inputId, $originalStatus)
+    {
+        $this->dispatch('restoreSwitch', inputId: $inputId, originalStatus: $originalStatus);
     }
 
     public function toggleStatus()
@@ -49,24 +55,11 @@ class InputFilter extends Component
         session()->flash('success', $input->custom_name . ' has successfully ' . ($input->status == 1 ? 'turned on.' : 'turned off.'));
     }
 
-    protected function publishStatusToMQTT($inputId, $inputSlug, $status, $duration, $limitSensorValue = null)
-    {
-        // Assuming you have a MQTT connection method or service
-        try {
-            $mqtt = MQTT::connection();
-            $topic = "switch-button"; // Set your topic here
-            $message = json_encode(['inputId' => $inputId, 'slug' => $inputSlug, 'status' => $status, 'duration' => $duration, 'limitSensor' => $limitSensorValue]);
-
-            // Publish the status
-            $mqtt->publish($topic, $message);
-
-            // Disconnect from the MQTT broker
-            $mqtt->disconnect();
-        } catch (\Exception $e) {
-            // Handle connection errors or any other exceptions
-            Log::error("MQTT Publish Error: " . $e->getMessage());
-        }
-    }
+    // #[On('sendFlashMessage')]
+    // public function sendFlashMessage($custom_name, $status)
+    // {
+    //     session()->flash('success', $custom_name . ' has successfully ' . ($status == 1 ? 'turned on.' : 'turned off.'));
+    // }
 
     public function messages()
     {
@@ -147,7 +140,7 @@ class InputFilter extends Component
         }
 
         // dd($this->inputValues);
-        return view('livewire.input-filter', [
+        return view('livewire.inputs.input-filter', [
             'controlText' => $this->controlType === 'auto' ? 'Switch to Manual Control' : 'Switch to Auto Control',
             'inputs' => $inputs
         ]);

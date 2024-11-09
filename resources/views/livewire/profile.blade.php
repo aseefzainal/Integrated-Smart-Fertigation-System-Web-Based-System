@@ -1,4 +1,4 @@
-<div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 mb-4 shadow-lg">
+<div class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 mb-4 shadow-sm">
     <section class="bg-white dark:bg-gray-900 rounded-lg sm:flex">
         {{-- <div class="py-8 px-4 lg:py-16"> --}}
         <div class="hidden sm:block border-r-2 bg-slate-50">

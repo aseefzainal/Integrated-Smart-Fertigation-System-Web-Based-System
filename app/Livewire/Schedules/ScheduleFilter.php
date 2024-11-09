@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Schedules;
 
 use Carbon\Carbon;
 use App\Models\Project;
@@ -39,6 +39,19 @@ class ScheduleFilter extends Component
     #[Validate('required|date_format:H:i')]
     public $time;
 
+    public $showDropdown = null;
+
+    public function toggleDropdown($scheduleId)
+    {
+        $this->showDropdown = $this->showDropdown === $scheduleId ? null : $scheduleId;
+        // dump($this->showDropdown);
+    }
+
+    public function hideDropdown()
+    {
+        $this->showDropdown = null;
+    }
+
     public function mount($project_id)
     {
         $this->project_id = $project_id;
@@ -61,7 +74,7 @@ class ScheduleFilter extends Component
             $schedules = $this->project->schedules();
         }
 
-        return view('livewire.schedule-filter', [
+        return view('livewire.schedules.schedule-filter', [
             'inputs' => $inputs,
             'schedules' => $schedules->orderBy(Schedule::raw('CAST(SUBSTRING(hst, 5) AS UNSIGNED)'), 'asc')->orderBy('time', 'asc')->paginate(5)
         ]);
@@ -95,7 +108,7 @@ class ScheduleFilter extends Component
 
                 $this->generatorHST = $hst[1] + $difference;
                 $this->hst = $this->generatorHST;
-            } else if(!$listHST && $this->date) {
+            } else if (!$listHST && $this->date) {
                 $this->hst = 1;
             } else {
                 $this->hst = 0;
@@ -134,7 +147,7 @@ class ScheduleFilter extends Component
             // if ($hstGenerator != $currentHSTNumber) {
             if ($hstGenerator != $this->hst && $this->date && $this->hst) {
                 // Fetch all schedule records
-                if($this->isEditing) {
+                if ($this->isEditing) {
                     $listHST = $this->project->schedules()->orderBy('date', 'asc')->orderBy('time', 'asc')->where('schedules.id', '!=', $this->scheduleId)->get();
                 } else {
                     $listHST = $this->project->schedules()->orderBy('date', 'asc')->orderBy('time', 'asc')->get();
@@ -250,10 +263,18 @@ class ScheduleFilter extends Component
         }
     }
 
+    public function openCrudModal()
+    {
+        $this->showCrudScheduleModal = true;
+        $this->dispatch('openModal', status: true);
+    }
+
     public function closeCrudModal()
     {
+        $this->hstChanges = [];
         $this->reset(['hst', 'date', 'time', 'type']);
         $this->isEditing = false;
         $this->showCrudScheduleModal = false;
+        $this->dispatch('openModal', status: false);
     }
 }

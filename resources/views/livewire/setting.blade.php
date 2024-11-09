@@ -6,7 +6,7 @@
         <div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"></div>
     </div> --}}
 <div
-    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 mb-4 bg-white overflow-hidden px-5 sm:px-10 py-8 shadow-lg">
+    class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 mb-4 bg-white overflow-hidden px-5 sm:px-10 py-8 shadow-sm">
     <h2 class="font-semibold mb-2 text-2xl">Settings</h2>
     <p class="text-sm">Manage your details and personal preferences here.</p>
 

@@ -1,12 +1,12 @@
-<div class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 mb-4">
+<div class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 mb-4">
     
     {{-- Toast Modal --}}
     <x-my-layouts.toast></x-my-layouts.toast>
 
     <section class="bg-gray-50 dark:bg-gray-900 rounded-lg">
-        <div class="mx-auto max-w-screen-xl">
+        <div class="mx-auto w-full">
             <!-- Start coding here -->
-            <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 relative  sm:rounded-lg overflow-hidden">
                 <div
                     class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">

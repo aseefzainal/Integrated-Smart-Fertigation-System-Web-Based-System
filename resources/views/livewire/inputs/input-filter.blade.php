@@ -1,5 +1,5 @@
 <div
-    class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 md:h-96 shadow-lg bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
+    class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 md:h-96 shadow-md bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
     <div class="flex justify-between items-center py-2 px-3 text-sm sticky top-0 z-10 bg-white shadow-sm">
         <h3 class="text-base">Input</h3>
         <div class="flex items-center space-x-2">
@@ -32,15 +32,13 @@
 
     <!-- Warning modal -->
     <div x-data="{ showModal: false }" x-show="showModal" id="deleteModal" tabindex="-1" aria-hidden="true"
-        class="fixed top-0 right-0 left-0 z-50 w-full h-full flex justify-center items-center bg-gray-500 bg-opacity-75"
+        class="fixed top-0 right-0 left-0 z-50 h-full flex justify-center items-center bg-gray-500 bg-opacity-75"
         style="display: none;">
-        <div class="relative p-4 w-full max-w-md h-auto" wire:loading.class="sm:w-1/5">
+        <div class="relative p-4 w-full max-w-md h-auto" wire:loading.class="sm:w-1/5" wire:target="toggleStatus">
             <!-- Modal content -->
             <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-                <div wire:loading.remove>
-                    <button
-                        @click="$dispatch('restoreSwitch', { inputId: @entangle('inputId'), originalStatus: @entangle('originalStatus') })"
-                        type="button"
+                <div wire:loading.remove wire:target="toggleStatus">
+                    <button wire:click="closeModal(@entangle('inputId'), @entangle('originalStatus'))" type="button"
                         class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
                         <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
@@ -64,21 +62,19 @@
                     </svg>
                     <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to toggle the status?</p>
                     <div class="flex justify-center items-center space-x-4">
-                        {{-- <button wire:click="$dispatch('hideModal')" type="button" --}}
-                        <button
-                            @click="$dispatch('restoreSwitch', { inputId: @entangle('inputId'), originalStatus: @entangle('originalStatus') })"
-                            type="button"
+                        <button wire:click="closeModal(@entangle('inputId'), @entangle('originalStatus'))" type="button"
                             class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
                             No, cancel
                         </button>
-                        <button @click="$wire.toggleStatus" type="button"
+                        {{-- <button @click="$wire.toggleStatus" type="button"  --}}
+                        <button wire:click="toggleStatus" type="button"
                             class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
                             Yes, I'm sure
                         </button>
                     </div>
                 </div>
                 {{-- <div wire:loading role="status" class="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2"> --}}
-                <div wire:loading role="status">
+                <div wire:loading wire:target="toggleStatus" role="status">
                     <svg aria-hidden="true"
                         class="w-8 h-8 inline text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                         viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -179,11 +175,11 @@
                         @endif
                     </div>
                     <div class="flex items-center">
-                        <button wire:loading.remove type="submit"
+                        <button wire:loading.remove wire:taget="save" type="submit"
                             class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                             Save Change
                         </button>
-                        <button wire:loading disabled type="button"
+                        <button wire:loading wire:taget="save" disabled type="button"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center">
                             <svg aria-hidden="true" role="status"
                                 class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101"
@@ -214,6 +210,8 @@
     </div>
 
     @if (!$inputs->isEmpty())
+        {{-- @dump($showInputModal, $showModal) --}}
+        {{-- <div class="grid sm:grid-cols-2 gap-3 px-3 pt-2 pb-3" {{ $showInputModal || $showModal ? '' : 'wire:poll' }}> --}}
         <div class="grid sm:grid-cols-2 gap-3 px-3 pt-2 pb-3">
             @foreach ($inputs as $input)
                 @if ($input->type === $controlType)
@@ -226,20 +224,23 @@
                                     Duration: {{ $input->pivot->duration }} Minutes
                                 </p>
                             @endif
-                            <p class="text-xs text-justify text-slate-600 mt-2 {{ $input->type === 'auto' ? '' : 'mr-2' }}">
+                            <p
+                                class="text-xs text-justify text-slate-600 mt-2 {{ $input->type === 'auto' ? '' : 'mr-2' }}">
                                 {{-- Note: {{ $input->description }} --}}
-                                Note: This input will automatically turn off when the soil is moist{{ ($input->pivot->duration > 0) ? ' or after ' . $input->pivot->duration . ' minutes.' : '.' }}
+                                Note: This input will automatically turn off when the soil is
+                                moist{{ $input->pivot->duration > 0 ? ' or after ' . $input->pivot->duration . ' minutes.' : '.' }}
                             </p>
                         </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
+                        @livewire('inputs.switch-button', ['inputId' => $input->pivot->id, 'status' => $input->pivot->status], key($input->pivot->id))
+                        {{-- <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="switch-{{ $input->pivot->id }}"
                                 name="switch-{{ $input->pivot->id }}" class="sr-only peer"
                                 {{ $input->pivot->status === 1 ? 'checked' : '' }}
-                                wire:click="$dispatch('openModal', { inputId: {{ $input->pivot->id }} })">
+                                wire:click="openModal({{ $input->pivot->id }})">
                             <div
                                 class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600">
                             </div>
-                        </label>
+                        </label> --}}
                         {{-- @if ($input->type === 'auto')
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor"
