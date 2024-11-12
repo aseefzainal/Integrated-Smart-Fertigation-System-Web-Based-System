@@ -38,6 +38,9 @@ class ScheduleFilter extends Component
 
     #[Validate('required|date_format:H:i')]
     public $time;
+    
+    #[Validate('required|integer|min:1')]
+    public $duration;
 
     public $showDropdown = null;
 
@@ -191,6 +194,7 @@ class ScheduleFilter extends Component
         $this->type = $schedule->project_input_id;
         $this->date = $schedule->date->format('Y-m-d');
         $this->time = $schedule->time->format('H:i');
+        $this->duration = $schedule->duration;
         $this->isEditing = true;
         $this->showCrudScheduleModal = true;
     }
@@ -220,7 +224,8 @@ class ScheduleFilter extends Component
                 'project_input_id' => $validatedData['type'],
                 'hst' => 'HST-' . $validatedData['hst'],
                 'date' => $validatedData['date'],
-                'time' => $validatedData['time']
+                'time' => $validatedData['time'],
+                'duration' => $validatedData['duration'],
             ]);
 
             $this->isEditing = false;
@@ -230,7 +235,8 @@ class ScheduleFilter extends Component
                 'project_input_id' => $validatedData['type'],
                 'hst' => 'HST-' . $validatedData['hst'],
                 'date' => $validatedData['date'],
-                'time' => $validatedData['time']
+                'time' => $validatedData['time'],
+                'duration' => $validatedData['duration'],
             ]);
 
             $this->reset(['hst', 'date', 'time', 'type']);

@@ -194,7 +194,7 @@
             @endif
         </div>
         @if (!$sensors->isEmpty())
-            <div class="grid sm:grid-cols-2 gap-3 px-3 pt-2 pb-3" wire:poll="getLatestDataSensor">
+            <div class="grid sm:grid-cols-2 gap-3 px-3 pt-2 pb-3">
                 @php
                     function icon($sensorId)
                     {
@@ -220,9 +220,10 @@
                         <div class="ml-3 pl-3 border-s-[1px]">
                             <h3>{{ $sensor->name }}</h3>
                             <div class="text-green-600 mt-2">
-                                <h3 class="text-2xl">{{ $sensor->value }}<span
-                                        class="text-sm">{{ $sensor->unit }}</span>
-                                </h3>
+                                @livewire('sensors.latest-data', ['sensorId' => $sensor->sensor_id, 'value' => $sensor->value, 'unit' => $sensor->unit], key($sensor->sensor_id))
+                                {{-- <h3 class="text-2xl">{{ $sensor->value }}
+                                    <span class="text-sm">{{ $sensor->unit }}</span>
+                                </h3> --}}
                             </div>
                         </div>
                     </div>

@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Dashboard;
 
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Layout;
 use Livewire\WithoutUrlPagination;
 
-#[Layout('components.my-layouts.layout')]
 class UserList extends Component
 {
     use WithPagination, WithoutUrlPagination; 
@@ -23,7 +21,7 @@ class UserList extends Component
             $users = $users->where('name', 'like', '%' . $this->query . '%');
         }
 
-        return view('livewire.user-list', ['users' => $users->paginate(10)]);
+        return view('livewire.dashboard.user-list', ['users' => $users->paginate(10)]);
     }
 
     // lifecycle Hook livewire updating + query (nama variable di atas)

@@ -1,5 +1,5 @@
 <div class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 mb-4">
-    
+
     {{-- Toast Modal --}}
     <x-my-layouts.toast></x-my-layouts.toast>
 
@@ -26,9 +26,9 @@
                                 placeholder="Search" required="">
                         </div>
                         {{-- <div>
-                                <button type="submit"
-                                    class="py-2 px-5 w-full text-sm font-medium text-center text-white rounded-lg border cursor-pointer bg-primary-700 border-primary-600 sm:rounded-none sm:rounded-r-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Search</button>
-                            </div> --}}
+                                    <button type="submit"
+                                        class="py-2 px-5 w-full text-sm font-medium text-center text-white rounded-lg border cursor-pointer bg-primary-700 border-primary-600 sm:rounded-none sm:rounded-r-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Search</button>
+                                </div> --}}
                         {{-- </form> --}}
                     </div>
                     <div
@@ -70,7 +70,12 @@
                                         {{ $user->title . ' ' . implode(' ', array_slice(preg_split('/\s+/', $user->name), 0, 3)) }}
                                     </th>
                                     <td class="px-4 py-3">{{ $user->phone }}</td>
-                                    <td class="px-4 py-3">Active</td>
+                                    <td class="px-4 py-3">
+                                        <span
+                                            class="rounded-xl text-xs {{ $user->email_verified_at ? 'border-green-400 text-green-400' : 'border-yellow-400 text-yellow-400' }} border-[1px] py-1 px-3">
+                                            {{ $user->email_verified_at ? 'Verified' : 'Not Verified' }}
+                                        </span>
+                                    </td>
                                     <td class="px-4 py-3">{{ $user->email }}</td>
                                     <td class="px-4 py-3">
                                         {{ Str::limit(optional($user->address)->address_line_1 . ' ' . optional($user->address)->address_line_2 . ' ' . optional($user->address)->postcode . ' ' . optional($user->address)->city . ' ' . optional($user->address)->state, 50, '...') }}
@@ -102,7 +107,8 @@
                                                 </li>
                                             </ul>
                                             <div class="py-1">
-                                                <a href="#" wire:click="delete({{ $user->id }})" wire:confirm="Are you sure you want to delete this user?"
+                                                <a href="#" wire:click="delete({{ $user->id }})"
+                                                    wire:confirm="Are you sure you want to delete this user?"
                                                     class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
                                             </div>
                                         </div>

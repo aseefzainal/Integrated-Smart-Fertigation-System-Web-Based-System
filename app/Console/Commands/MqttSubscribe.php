@@ -32,16 +32,16 @@ class MqttSubscribe extends Command
             // Decode the JSON message into an associative array
             $data = json_decode($message, true);
 
-            if(is_array($data) && isset($data['status_input'])) {
-                foreach($data['status_input'] as $input) {
-                    if(isset($input['inputId'], $input['status'])) {
+            if (is_array($data) && isset($data['status_input'])) {
+                foreach ($data['status_input'] as $input) {
+                    if (isset($input['inputId'], $input['status'])) {
                         $this->info(sprintf("Received message on topic [%s]: inputID: %s - input status: %s", $topic, $input['inputId'], $input['status']));
                         // $this->info(sprintf("Received message on topic [%s]: input status: %s", $topic, $input['status']));
                         $projectInput = ProjectInput::find($input['inputId']);
                         $projectInput->status = $input['status'];
                         $projectInput->save();
 
-                        if(isset($input['scheduleId'])) {
+                        if (isset($input['scheduleId'])) {
                             // $this->info(sprintf("Received message on topic [%s]: inputID: %s - input status: %s - schedule ID: %s", $topic, $input['inputId'], $input['status'], $input['scheduleId']));
                             $schedule = Schedule::find($input['scheduleId']);
                             $schedule->status = 2;
@@ -53,6 +53,7 @@ class MqttSubscribe extends Command
 
             if (is_array($data) && isset($data['sensor_data'])) {
                 foreach ($data['sensor_data'] as $sensor) {
+                    $this->info(sprintf("Received message on topic [%s]: %s - %s - %s", $topic, $sensor['project_id'], $sensor['sensor_id'], $sensor['value']));
                     // Check if required fields are present
                     if (isset($sensor['project_id'], $sensor['sensor_id'], $sensor['value'])) {
                         // Save to the database
@@ -66,57 +67,60 @@ class MqttSubscribe extends Command
                         );
 
                         $sensorNotification = SensorNotification::where('project_id', $sensor['project_id'])->where('sensor_id', $sensor['sensor_id'])->first();
+                        
+                        if ($sensorNotification) {
+                            if ($sensorNotification->is_sent == false && $sensor['value'] <= $sensorNotification->value) {
+                                $this->info(sprintf("Received message on topic [%s]: %s", $topic, "have notification"));
+                                $project = Project::find($sensor['project_id']);
 
-                        if ($sensorNotification->is_sent == false && $sensor['value'] <= $sensorNotification->value) {
-                            $project = Project::find($sensor['project_id']);
+                                $settings = $project->user->settings()->where('name', 'sensor_notification')->first();
+                                $sensorNotifications = json_decode($settings->pivot->value, true);
 
-                            $settings = $project->user->settings()->where('name', 'sensor_notification')->first();
-                            $sensorNotifications = json_decode($settings->pivot->value, true);
+                                $whatsAppMessage = "*🚨 Alert* 🚨\n" .
+                                    "🛠️ *Project:* " . $project->name . "\n" .
+                                    "📉 *Sensor:* " . $sensorNotification->sensor->name . "\n" .
+                                    "📊 *Threshold Value:* " . $sensorNotification->value . $sensorNotification->sensor->unit . "\n" .
+                                    "🔍 *Current Value:* " . $sensor['value'] . $sensorNotification->sensor->unit . "\n\n" .
+                                    "Please take the necessary action!";
 
-                            $whatsAppMessage = "*🚨 Alert* 🚨\n" .
-                                "🛠️ *Project:* " . $project->name . "\n" .
-                                "📉 *Sensor:* " . $sensorNotification->sensor->name . "\n" .
-                                "📊 *Threshold Value:* " . $sensorNotification->value . $sensorNotification->sensor->unit . "\n" .
-                                "🔍 *Current Value:* " . $sensor['value'] . $sensorNotification->sensor->unit . "\n\n" .
-                                "Please take the necessary action!";
+                                $smsMessage = "Alert\n" .
+                                    "Project:" . $project->name . "\n" .
+                                    "Sensor: " . $sensorNotification->sensor->name . "\n" .
+                                    "Threshold Value: " . $sensorNotification->value . $sensorNotification->sensor->unit . "\n" .
+                                    "Current Value: " . $sensor['value'] . $sensorNotification->sensor->unit . "\n\n" .
+                                    "Please take the necessary action!";
 
-                            $smsMessage = "Alert\n" .
-                                "Project:" . $project->name . "\n" .
-                                "Sensor: " . $sensorNotification->sensor->name . "\n" .
-                                "Threshold Value: " . $sensorNotification->value . $sensorNotification->sensor->unit . "\n" .
-                                "Current Value: " . $sensor['value'] . $sensorNotification->sensor->unit . "\n\n" .
-                                "Please take the necessary action!";
+                                foreach ($sensorNotifications as $notification) {
+                                    if ($notification['status']) {
 
-                            foreach ($sensorNotifications as $notification) {
-                                if ($notification['status']) {
+                                        $this->info(sprintf("Send Notification on ProjectID [%s]: %s - %s", $sensor['project_id'], $notification['name'], $message));
 
-                                    $this->info(sprintf("Send Notification on ProjectID [%s]: %s - %s", $sensor['project_id'], $notification['name'], $message));
+                                        if ($notification['name'] === 'WhatsApp') {
+                                            // $this->info(sprintf("Send Notification on ProjectID [%s]: %s - %s", $sensor['project_id'], $notification['name'], true));
+                                            $this->notificationService->sendWhatsApp($project->user->phone, $whatsAppMessage);
+                                        }
 
-                                    if ($notification['name'] === 'WhatsApp') {
-                                        // $this->info(sprintf("Send Notification on ProjectID [%s]: %s - %s", $sensor['project_id'], $notification['name'], true));
-                                        $this->notificationService->sendWhatsApp($project->user->phone, $whatsAppMessage);
+                                        // if ($notification['name'] === 'SMS') {
+                                        //     // $this->info(sprintf("Send Notification on ProjectID [%s]: %s - %s", $sensor['project_id'], $notification['name'], true));
+                                        //     $this->notificationService->sendSms($project->user->phone, $smsMessage);
+                                        // }
+
+                                        // if ($notification['name'] === 'Telegram') {
+                                        // }
+
+                                        // if ($notification['name'] === 'Email') {
+                                        // }
+
+                                        SensorNotification::updateOrCreate(
+                                            [
+                                                'project_id' => $sensor['project_id'],
+                                                'sensor_id' => $sensor['sensor_id'],
+                                            ],
+                                            [
+                                                'is_sent' => true
+                                            ]
+                                        );
                                     }
-
-                                    // if ($notification['name'] === 'SMS') {
-                                    //     // $this->info(sprintf("Send Notification on ProjectID [%s]: %s - %s", $sensor['project_id'], $notification['name'], true));
-                                    //     $this->notificationService->sendSms($project->user->phone, $smsMessage);
-                                    // }
-
-                                    // if ($notification['name'] === 'Telegram') {
-                                    // }
-
-                                    // if ($notification['name'] === 'Email') {
-                                    // }
-
-                                    SensorNotification::updateOrCreate(
-                                        [
-                                            'project_id' => $sensor['project_id'],
-                                            'sensor_id' => $sensor['sensor_id'],
-                                        ],
-                                        [
-                                            'is_sent' => true
-                                        ]
-                                    );
                                 }
                             }
                         }

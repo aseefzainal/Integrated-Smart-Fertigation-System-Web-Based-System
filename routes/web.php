@@ -1,17 +1,17 @@
 <?php
 
-use App\Livewire\CreateNewUser;
 use App\Livewire\Device;
 use App\Livewire\Profile;
 use App\Livewire\Setting;
-use App\Livewire\UserList;
+use App\Livewire\CreateNewUser;
+use App\Livewire\Dashboard\Dashboard;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/user-list', UserList::class);
+Route::get('/dashboards', Dashboard::class);
 
 Route::get('/profile/{user:username}', Profile::class);
 

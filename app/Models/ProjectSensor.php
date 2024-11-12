@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProjectSensor extends Model
 {
@@ -12,6 +13,11 @@ class ProjectSensor extends Model
     protected $guarded = [
         'id'
     ];
+
+    public function sensor(): BelongsTo
+    {
+        return $this->belongsTo(Sensor::class, 'sensor_id');
+    }
 
     // Event to handle default settings on project sensor creation
     protected static function booted()

@@ -46,11 +46,11 @@
                             </div>
                             <div class="flex items-start mt-2">
                                 {{-- <input checked id="checked-checkbox" wire:click="$toggle('autoGenerateHST')" --}}
-                                <input checked id="checked-checkbox" wire:click="checkedAutoGenerateHST" type="checkbox"
+                                <input {{ $autoGenerateHST ? 'checked' : '' }} id="checked-checkbox" wire:click="checkedAutoGenerateHST" type="checkbox"
                                     value=""
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="checked-checkbox"
-                                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Auto generate
+                                    class="ms-2 text-xs font-medium text-gray-900 dark:text-gray-300">Auto generate
                                     HST based on date selected</label>
                             </div>
                             @error('hst')
@@ -102,6 +102,20 @@
                                     class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             </div>
                             @error('time')
+                                <span class="text-red-600 text-xs">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label for="duration"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Duration</label>
+                            <div class="flex items-center">
+                                <input type="number" name="duration" wire:model.live="duration" id="duration"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-s-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="0">
+                                <span
+                                    class="py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-50 border border-s-0 border-gray-300 rounded-e-lg">Minutes</span>
+                            </div>
+                            @error('duration')
                                 <span class="text-red-600 text-xs">{{ $message }}</span>
                             @enderror
                         </div>
@@ -169,7 +183,7 @@
                         </div>
                     @endif
                     <div class="flex items-center">
-                        <button wire:loading.remove type="submit"
+                        <button wire:loading.remove wire:target="save" type="submit"
                             class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                             {{ !empty($hstChanges)
                                 ? ($isEditing
@@ -179,7 +193,7 @@
                                     ? 'Update schedule'
                                     : 'Add schedule') }}
                         </button>
-                        <button wire:loading disabled type="button"
+                        <button wire:loading wire:target="save" disabled type="button"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center">
                             <svg aria-hidden="true" role="status"
                                 class="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101"
@@ -212,7 +226,8 @@
     <section class="bg-gray-50 dark:bg-gray-900 h-full rounded-lg">
         <div class="mx-auto max-w-screen-xl h-full">
             <div class="bg-white dark:bg-gray-800 relative sm:rounded-lg overflow-hidden h-full">
-                <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                <div
+                    class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <h3 class="text-base">Irrigation schedule</h3>
                     <div
                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
@@ -304,9 +319,10 @@
                                 <tr>
                                     <th scope="col" class="px-4 py-3">HST</th>
                                     <th scope="col" class="px-4 py-3">Irrigation</th>
+                                    <th scope="col" class="px-4 py-3">Status</th>
                                     <th scope="col" class="px-4 py-3">Date</th>
                                     <th scope="col" class="px-4 py-3">Time</th>
-                                    <th scope="col" class="px-4 py-3">Status</th>
+                                    <th scope="col" class="px-4 py-3">Duration</th>
                                     <th scope="col" class="px-4 py-3">
                                         <span class="sr-only">Actions</span>
                                     </th>
@@ -320,15 +336,16 @@
                                             class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ $schedule->hst }}</th>
                                         <td class="px-4 py-3">{{ $schedule->projectInput->custom_name }}</td>
-                                        <td class="px-4 py-3">{{ $schedule->date->format('d M Y') }}</td>
-                                        <td class="px-4 py-3">{{ $schedule->time->format('g:i A') }}</td>
                                         <!-- Schedule Status Component -->
                                         <td class="px-4 py-3">
                                             <livewire:schedules.schedule-status :schedule-id="$schedule->id" :status="$schedule->status"
                                                 :wire:key="'status-'.$schedule->id" />
                                         </td>
+                                        <td class="px-4 py-3">{{ $schedule->date->format('d M Y') }}</td>
+                                        <td class="px-4 py-3">{{ $schedule->time->format('g:i A') }}</td>
+                                        <td class="px-4 py-3">{{ $schedule->duration . ' Minutes' }}</td>
                                         <td class="px-4 py-3 flex items-center justify-end">
-                                            {{-- <button @click="$wire.toggleDropdown({{ $schedule->id }})"
+                                            <button @click="$wire.toggleDropdown({{ $schedule->id }})"
                                                 class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                                                 type="button">
                                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
@@ -355,13 +372,19 @@
                                                         wire:confirm="Are you sure you want to delete this schedule?"
                                                         class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
                                                 </div>
-                                            </div> --}}
-                                            <button id="{{ $schedule->id }}-dropdown-button" data-dropdown-toggle="{{ $schedule->id }}-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
-                                                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                            </div>
+                                            {{-- <button id="{{ $schedule->id }}-dropdown-button"
+                                                data-dropdown-toggle="{{ $schedule->id }}-dropdown"
+                                                class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                                type="button">
+                                                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
+                                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                                 </svg>
                                             </button>
-                                            <div id="{{ $schedule->id }}-dropdown" class="hidden absolute right-0 z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                            <div id="{{ $schedule->id }}-dropdown"
+                                                class="hidden absolute right-0 z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
                                                     <li>
                                                         <a href="#"
@@ -377,7 +400,7 @@
                                                         wire:confirm="Are you sure you want to delete this schedule?"
                                                         class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </td>
                                     </tr>
                                 @endforeach

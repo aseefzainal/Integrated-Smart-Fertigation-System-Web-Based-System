@@ -80,11 +80,17 @@ class User extends Authenticatable
         };
     }
 
+    public function getRandomColorAttribute()
+    {
+        $colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500'];
+        return $colors[array_rand($colors)];
+    }
+
     // Correct relationship with the 'settings' table, through the 'user_settings' pivot table
     public function settings(): BelongsToMany
     {
         return $this->belongsToMany(Setting::class, 'user_settings')
-                    ->withPivot('value'); // 'value' is the custom field in the pivot table
+            ->withPivot('value'); // 'value' is the custom field in the pivot table
     }
 
     // Event to handle default settings on user creation

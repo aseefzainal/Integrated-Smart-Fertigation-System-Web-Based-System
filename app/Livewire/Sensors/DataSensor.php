@@ -121,11 +121,6 @@ class DataSensor extends Component
         $this->project = Project::find($project_id);
     }
 
-    public function getLatestDataSensor()
-    {
-        $this->sensors = $this->project->latestSensors()->get();
-    }
-
     public function render()
     {
         $this->limitSensors = $this->project->limitSensors;
@@ -161,7 +156,7 @@ class DataSensor extends Component
             $this->countdown = $countdown->value;
         }
 
-        $this->getLatestDataSensor();
+        $this->sensors = $this->project->latestSensors()->get();
 
         return view('livewire.sensors.data-sensor');
     }

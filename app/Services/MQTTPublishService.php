@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Sensor;
 use App\Models\Project;
 use App\Models\ProjectInput;
+use App\Models\Schedule;
 use PhpMqtt\Client\Facades\MQTT;
 use Illuminate\Support\Facades\Log;
 
@@ -12,6 +13,13 @@ class MQTTPublishService
 {
     public function publishInputStatus(ProjectInput $input, $scheduleId = null)
     {
+        if($scheduleId) {
+            $schedule = Schedule::find($scheduleId);
+            $duration = $schedule->duration;
+        } else {
+            $duration = $input->duration;
+        }
+
         if ($input->input->slug === 'fertilizer-irrigation') {
             $project = Project::find($input->project->id);
             $sensor = Sensor::where('slug', 'ec')->first();
@@ -23,10 +31,10 @@ class MQTTPublishService
                 $limitSensorValue = $limitSensor->value;
 
                 // Publish the updated status to MQTT
-                $this->publishStatusToMQTT($input->project->id, $input->id, $input->input->slug, $input->status, $input->duration, $scheduleId, $limitSensorValue);
+                $this->publishStatusToMQTT($input->project->id, $input->id, $input->input->slug, $input->status, $duration, $scheduleId, $limitSensorValue);
             }
         } else {
-            $this->publishStatusToMQTT($input->project->id, $input->id, $input->input->slug, $input->status, $input->duration, $scheduleId);
+            $this->publishStatusToMQTT($input->project->id, $input->id, $input->input->slug, $input->status, $duration, $scheduleId);
         }
     }
 
