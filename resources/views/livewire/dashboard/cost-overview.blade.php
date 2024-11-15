@@ -50,7 +50,8 @@
             <canvas id="costChart"></canvas>
         </div>
     </div>
-    <div class="rounded-lg border-[1px] border-gray-200 dark:border-gray-600 bg-white shadow-md overflow-y-auto no-scrollbar">
+    <div
+        class="rounded-lg border-[1px] border-gray-200 dark:border-gray-600 bg-white shadow-md overflow-y-auto no-scrollbar">
         <div class="p-4 sticky top-0 z-10 bg-white">
             <h3 class="font-medium">Highest Unpaid</h3>
         </div>
@@ -63,7 +64,8 @@
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
                         <div class="flex flex-col">
-                            <h3 class="text-sm">{{ implode(' ', array_slice(preg_split('/\s+/', $user->name), 0, 2)) }}</h3>
+                            <h3 class="text-sm">{{ implode(' ', array_slice(preg_split('/\s+/', $user->name), 0, 2)) }}
+                            </h3>
                             <span class="text-xs text-slate-500">{{ $user->username }}</span>
                         </div>
                     </div>
@@ -77,14 +79,19 @@
     </div>
 </div>
 
-{{-- @assets --}}
+@assets
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-{{-- @endassets --}}
+@endassets
 
-{{-- @script --}}
+@script
     <script>
-        // Chart.js initialization
-        document.addEventListener("DOMContentLoaded", function() {
+        let myChart = null; // Declare a variable to hold the chart instance
+
+        // Function to initialize or update the chart
+        function initOrUpdateChart() {
+
+            // Chart.js initialization
+            // document.addEventListener("DOMContentLoaded", function() {
             const contex = document.getElementById('costChart').getContext('2d');
 
             // Data for the chart
@@ -103,7 +110,7 @@
                         borderColor: 'rgb(54, 162, 235)',
                         backgroundColor: 'rgba(54, 162, 235, 0.8)',
                         // borderWidth: 1,
-                        borderRadius: 5, 
+                        borderRadius: 5,
                     },
                     {
                         label: 'Unpaid',
@@ -111,7 +118,7 @@
                         borderColor: 'rgb(240, 82, 82)',
                         backgroundColor: 'rgba(240, 82, 82, 0.8)',
                         // borderWidth: 1,
-                        borderRadius: 5, 
+                        borderRadius: 5,
                     },
                 ]
             };
@@ -135,7 +142,16 @@
             };
 
             // Create chart instance
-            new Chart(contex, config);
+            myChart = new Chart(contex, config);
+            // });
+        }
+        // }
+        // Call the function to initialize the chart on load
+        initOrUpdateChart();
+
+        // Use Livewire hook to re-initialize the chart when chartData updates
+        Livewire.on('costChart', () => {
+            initOrUpdateChart(); // Reinitialize the chart with updated data
         });
     </script>
-{{-- @endscript --}}
+@endscript

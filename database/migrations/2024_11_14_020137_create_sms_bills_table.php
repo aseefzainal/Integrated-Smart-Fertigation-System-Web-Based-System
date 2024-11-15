@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('sms_bills', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_id')->constrained('project_categories')->onDelete('cascade');
-            // $table->foreignId('address_id')->constrained()->onDelete('cascade');
-            $table->string('name', 100);
-            $table->string('slug', 50)->unique();
-            $table->boolean('status')->default(false);
-            $table->timestamp('last_active_at')->nullable();
+            $table->decimal('total_sms_amount', 10, 2)->default(0);
+            $table->enum('status', ['paid', 'unpaid', 'pending'])->default('unpaid');
+            $table->string('invoice_number')->unique();
+            $table->date('due_date');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('sms_bills');
     }
 };

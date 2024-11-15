@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
                 'username' => '@aseef_zainal',
                 'email' => 'aseefzainal65@gmail.com',
                 'email_verified_at' => now(),
-                'phone' => '+601165157010',
+                'phone' => '+60199896697',
                 'role' => 'admin',
                 'gender' => 'male',
                 'birthday' => '2000-02-05',

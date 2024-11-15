@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use run;
+use Carbon\Carbon;
+use App\Models\Project;
 use App\Services\Notifications;
 use Illuminate\Console\Command;
 use App\Services\ScheduleService;
@@ -41,5 +43,17 @@ class RunScheduleService extends Command
     {
         $this->scheduleService->updateInputStatus();
         $this->notification->ResetNotification();
+        
+        $threshold = Carbon::now()->subMinutes(5); // Set your threshold, e.g., 5 minutes
+        $projects = Project::where('last_active_at', '<', $threshold)
+                            ->orWhereNull('last_active_at')
+                            ->get();
+
+        foreach ($projects as $project) {
+            $project->update(['status' => false]);
+            $this->info("Project ID {$project->id} marked as OFF due to inactivity.");
+        }
+
+        return Command::SUCCESS;
     }
 }

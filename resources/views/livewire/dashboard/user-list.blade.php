@@ -123,3 +123,11 @@
         </div>
     </section>
 </div>
+
+@script
+    <script>
+        Livewire.on('flowbitInit', () => {
+            initFlowbite();
+        });
+    </script>
+@endscript

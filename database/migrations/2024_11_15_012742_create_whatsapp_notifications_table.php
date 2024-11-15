@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('whatsapp_notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_id')->constrained('project_categories')->onDelete('cascade');
-            // $table->foreignId('address_id')->constrained()->onDelete('cascade');
-            $table->string('name', 100);
-            $table->string('slug', 50)->unique();
-            $table->boolean('status')->default(false);
-            $table->timestamp('last_active_at')->nullable();
+            $table->text('message');
+            $table->timestamp('sent_at');
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('whatsapp_notifications');
     }
 };

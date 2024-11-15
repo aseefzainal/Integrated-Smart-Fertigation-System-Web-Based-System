@@ -11,7 +11,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboards', Dashboard::class);
+Route::get('/user-list', Dashboard::class);
 
 Route::get('/profile/{user:username}', Profile::class);
 

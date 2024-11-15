@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Setting;
 use App\Models\SensorNotification;
+use App\Models\SmsNotification;
+use App\Models\WhatsAppNotification;
 use Illuminate\Support\Facades\Http;
 
 // class SmsService {
@@ -19,15 +21,15 @@ class Notifications
         $this->smsApiToken = env('SMS_API_TOKEN');
         $this->whatsappApiToken = env('WHATSAPP_API_TOKEN');
 
-        dump('WhatsApp API Token: ' . $this->smsApiToken);
+        // dump('WhatsApp API Token: ' . $this->smsApiToken);
     }
 
-    public function sendSms($phone, $message, $callbackUrl = null, $leadId = null, $preview = 1, $sendAt = null)
+    public function sendSms($user, $message, $callbackUrl = null, $leadId = null, $preview = 1, $sendAt = null)
     {
         $response = Http::asMultipart()->post($this->smsApiUrl, [
             // '_token' => $this->smsApiToken,
             '_token' => 'jJuIg1mrMDUpmYpTAycbiKSZJxK3cD6q',
-            'phone' => $phone,
+            'phone' => $user->phone,
             'message' => $message,
             'callback_url' => $callbackUrl ?? 'https://myserver.com.my/callback_receive',
             'preview' => $preview,
@@ -37,6 +39,12 @@ class Notifications
 
         // Log the full response
         if ($response->successful()) {
+            SmsNotification::create([
+                'user_id' => $user->id,
+                'message' => $message,
+                'sent_at' => now(),
+            ]);
+
             dump('SMS sent successfully: ' . $response->body());
         } else {
             dump('Error sending SMS: ' . $response->status() . ' - ' . $response->body());
@@ -46,10 +54,10 @@ class Notifications
         // return $response->json();
     }
 
-    public function sendWhatsApp($phone, $message)
+    public function sendWhatsApp($user, $message)
     {
         $data = [
-            'phone_number' => $phone,
+            'phone_number' => $user->phone,
             'message' => $message,
         ];
 
@@ -60,6 +68,12 @@ class Notifications
 
         // Log the full response
         if ($response->successful()) {
+            WhatsAppNotification::create([
+                'user_id' => $user->id,
+                'message' => $message,
+                'sent_at' => now(),
+            ]);
+
             dump('WhatsApp sent successfully: ' . $response->body());
         } else {
             dump('Error sending WhatsApp: ' . $response->status() . ' - ' . $response->body());
