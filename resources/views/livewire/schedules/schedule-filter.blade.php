@@ -228,7 +228,7 @@
             <div class="bg-white dark:bg-gray-800 relative sm:rounded-lg overflow-hidden h-full">
                 <div
                     class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-                    <h3 class="text-base">Irrigation schedule</h3>
+                    <h3 class="text-sm sm:text-base">Irrigation schedule</h3>
                     <div
                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                         <button type="button" wire:click="$set('showCrudScheduleModal', true)"
@@ -409,7 +409,7 @@
                     </div>
                     {{ $schedules->links(data: ['scrollTo' => false]) }}
                 @else
-                    <div class="bg-slate-100 flex flex-col justify-center items-center h-full">
+                    <div class="bg-slate-100 flex flex-col justify-center items-center sm:h-full text-center text-xs sm:text-base text-slate-700 py-5 px-2">
                         <p>You haven't created any irrigation schedules yet. </p>
                         {{-- <p>To get started, simply click 'Add schedule' or reach out to our customer support for assistance.</p> --}}
                     </div>

@@ -1,12 +1,13 @@
-<div
-    class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 h-48 md:h-[26.3rem] bg-white shadow-md flex flex-col">
+<div {{-- class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 h-48 md:h-[26.3rem] bg-white shadow-md flex flex-col"> --}}
+    class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 bg-white shadow-md flex flex-col">
+
     <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:items-center md:justify-between py-3 px-3">
         <div class="flex items-center">
             @if (isset($chartData['sensorName']))
                 <div class="w-5 h-3 bg-[rgb(255,99,132)] mr-2"></div>
                 <h3 class="text-sm">{{ $chartData['sensorName'] }}</h3>
             @else
-                <h3 class="text-sm">Chart</h3>
+                <h3 class="text-sm sm:text-base">Chart</h3>
             @endif
         </div>
         @if ($chartData['data'])
@@ -46,13 +47,16 @@
             </div>
         @endif
     </div>
+
     {{-- @dump($chartData['data']) --}}
     @if ($chartData['data'])
-        <div wire:poll wire:ignore class="w-full h-full pl-1">
+        {{-- <div wire:poll wire:ignore class="w-full"> --}}
+        <div wire:poll="chartData" wire:ignore class="w-full h-44 pl-2 pb-2 sm:h-full sm:w-auto">
             <canvas id="myChart"></canvas>
         </div>
     @else
-        <div class="h-full flex flex-col justify-center items-center bg-slate-100">
+        <div
+            class="h-full flex flex-col justify-center items-center bg-slate-100 text-center text-xs sm:text-base text-slate-700 py-5 px-2">
             <p>There is no historical data available.</p>
             {{-- <p class="mt-2">Please contact an administrator to add sensors.</p> --}}
         </div>
@@ -72,6 +76,21 @@
 
     @script
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const isMobile = window.innerWidth <= 768;
+                $wire.dispatch('setLimit', {
+                    isMobile: isMobile ? 5 : 10
+                });
+            });
+
+            window.addEventListener('resize', function() {
+                const isMobile = window.innerWidth <= 768;
+                // Livewire.emit('setLimit', isMobile ? 5 : 10);
+                $wire.dispatch('setLimit', {
+                    isMobile: isMobile ? 5 : 10
+                });
+            });
+
             let myChart = null; // Declare a variable to hold the chart instance
 
             // Function to initialize or update the chart
@@ -79,6 +98,10 @@
                 const ctx = document.getElementById('myChart').getContext('2d'); // Get the canvas context
                 const chartLabels = $wire.chartData['labels'];
                 const chartData = $wire.chartData['data'];
+
+                // if (myChart) {
+                //     myChart.destroy();
+                // }
 
                 if (myChart) {
                     // If the chart already exists, update the data and call chart.update()
@@ -119,18 +142,18 @@
                                     display: false // Optionally hide the entire legend
                                 }
                             },
-                            scales: {
-                                y: {
-                                    grid: {
-                                        // Optionally disable y-axis grid lines
-                                    },
-                                },
-                                x: {
-                                    grid: {
-                                        // Optionally disable x-axis grid lines
-                                    }
-                                }
-                            }
+                            // scales: {
+                            //     y: {
+                            //         grid: {
+                            //             // Optionally disable y-axis grid lines
+                            //         },
+                            //     },
+                            //     x: {
+                            //         grid: {
+                            //             // Optionally disable x-axis grid lines
+                            //         }
+                            //     }
+                            // }
                         }
                     };
 

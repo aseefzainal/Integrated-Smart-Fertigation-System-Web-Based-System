@@ -6,8 +6,6 @@ use App\Models\Project;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\ProjectInput;
-use PhpMqtt\Client\Facades\MQTT;
-use Illuminate\Support\Facades\Log;
 use App\Services\MQTTPublishService;
 
 class InputFilter extends Component

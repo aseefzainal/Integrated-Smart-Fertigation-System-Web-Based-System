@@ -13,6 +13,8 @@ use Illuminate\Support\Str;
 use App\Models\ProjectInput;
 use App\Models\ProjectSensor;
 use App\Models\SensorNotification;
+use App\Models\SmsNotification;
+use App\Models\WhatsAppNotification;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,6 +25,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            SubscriptionPackageSeeder::class,
+            NotificationChannelSeeder::class,
             SettingSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
@@ -69,6 +73,9 @@ class DatabaseSeeder extends Seeder
                 'address_type' => 'site', // You can specify the address type if needed
             ]);
         }
+
+        SmsNotification::factory(200)->create();
+        WhatsAppNotification::factory(200)->create();
 
         // Schedule::factory(100)->create();
 

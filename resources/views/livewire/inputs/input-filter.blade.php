@@ -1,24 +1,24 @@
 <div
     class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 md:h-96 shadow-md bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
     <div class="flex justify-between items-center py-2 px-3 text-sm sticky top-0 z-10 bg-white shadow-sm">
-        <h3 class="text-base">Input</h3>
+        <h3 class="text-sm sm:text-base">Input</h3>
         <div class="flex items-center space-x-2">
             @if (!$inputs->isEmpty())
                 <span
-                    class="text-gray-900 flex items-center justify-center py-2 px-3 cursor-pointer rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700"
+                    class="text-xs sm:text-sm text-gray-900 flex items-center justify-center py-1.5 px-3 sm:py-2 cursor-pointer rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700"
                     wire:click="toggleControlType">
                     {{-- Switch to ManualControl --}}
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-5 text-gray-400 mr-2">
+                        stroke="currentColor" class="size-3 sm:size-5 text-gray-600 sm:text-gray-400 mr-2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                     </svg>
                     {{ $controlText }}
                 </span>
                 <div wire:click="$set('showInputModal', true)"
-                    class="p-2 cursor-pointer rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700">
+                    class="p-1.5 sm:p-2 cursor-pointer rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                        class="size-5 text-gray-400">
+                        class="size-4 sm:size-5 text-gray-400">
                         <path fill-rule="evenodd"
                             d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 0 0 0 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 0 0 0-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 0 0-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 0 0-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 0 0-1.85-1.567h-1.843ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z"
                             clip-rule="evenodd" />
@@ -212,20 +212,20 @@
     @if (!$inputs->isEmpty())
         {{-- @dump($showInputModal, $showModal) --}}
         {{-- <div class="grid sm:grid-cols-2 gap-3 px-3 pt-2 pb-3" {{ $showInputModal || $showModal ? '' : 'wire:poll' }}> --}}
-        <div class="grid sm:grid-cols-2 gap-3 px-3 pt-2 pb-3">
+        <div class="grid lg:grid-cols-2 gap-3 px-3 pt-2 pb-3">
             @foreach ($inputs as $input)
                 @if ($input->type === $controlType)
                     <div wire:key="input-{{ $input->pivot->id }}"
                         class="flex shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3 items-start justify-between">
-                        <div>
-                            <h3>{{ $input->pivot->custom_name }}</h3>
+                        <div class="space-y-1 sm:space-y-2">
+                            <h3 class="text-sm sm:text-base">{{ $input->pivot->custom_name }}</h3>
                             @if ($input->type === 'auto')
-                                <p class="text-xs text-slate-600 mt-2 mr-2">
+                                <p class="text-[11px] sm:text-xs text-slate-600 mr-2">
                                     Duration: {{ $input->pivot->duration }} Minutes
                                 </p>
                             @endif
                             <p
-                                class="text-xs text-justify text-slate-600 mt-2 {{ $input->type === 'auto' ? '' : 'mr-2' }}">
+                                class="text-[11px] sm:text-xs text-slate-600 {{ $input->type === 'auto' ? '' : 'mr-2' }}">
                                 {{-- Note: {{ $input->description }} --}}
                                 Note: This input will automatically turn off when the soil is
                                 moist{{ $input->pivot->duration > 0 ? ' or after ' . $input->pivot->duration . ' minutes.' : '.' }}
@@ -255,7 +255,7 @@
             @endforeach
         </div>
     @else
-        <div class="col-span-2 h-full flex flex-col justify-center items-center bg-slate-100">
+        <div class="col-span-2 sm:h-full flex flex-col justify-center items-center text-center bg-slate-100 text-xs sm:text-base text-slate-700 py-5 px-2">
             <p>No inputs have been added to this project yet.
             </p>
             <p class="mt-2">Please contact an administrator to add inputs to this project.

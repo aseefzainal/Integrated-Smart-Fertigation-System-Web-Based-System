@@ -114,6 +114,12 @@ class User extends Authenticatable
             }
         });
     }
+
+    public function smsBills(): HasMany
+    {
+        return $this->hasMany(SmsBill::class);
+    }
+
     public function address(): MorphOne
     {
         return $this->morphOne(Address::class, 'addressable');

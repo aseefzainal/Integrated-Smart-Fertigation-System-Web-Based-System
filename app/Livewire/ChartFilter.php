@@ -6,37 +6,43 @@ use App\Models\Sensor;
 use App\Models\Project;
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\Models\ProjectSensor;
 
 class ChartFilter extends Component
 {
     public $sensor_id;
+    public $sensors;
     public $project_id;
     public $chartData = [];
+    public $limit = 10; 
 
     public function mount($project_id)
     {
         $this->project_id = $project_id;
     }
 
-    public function render()
+    #[On('setLimit')]
+    public function setLimit($isMobile)
     {
-        // Set default sensor or first one from the list
-        $project = Project::where('id', $this->project_id)->first();
+        $this->limit = $isMobile; // Update the limit dynamically
+    }
 
-        $sensors = $project->latestSensors()->get();
+    public function chartData()
+    {
+        $project = Project::find($this->project_id);
+
+        $this->sensors = $project->latestSensors()->get();
 
         // Check if sensors are available
-        if ($sensors->isNotEmpty()) {
+        if ($this->sensors->isNotEmpty()) {
             if ($this->sensor_id == null) {
-                $this->sensor_id = $sensors->first()->sensor_id;
+                $this->sensor_id = $this->sensors->first()->sensor_id;
             }
 
             // $sensorReadings = ProjectSensor::where('sensor_id', $this->sensor_id)
             $sensorReadings = $project->projectSensor()
                 ->where('sensor_id', $this->sensor_id)
                 ->orderBy('created_at', 'desc')
-                ->take(10)
+                ->take($this->limit)
                 ->get();
 
             // Prepare data for the chart
@@ -55,10 +61,13 @@ class ChartFilter extends Component
             $this->chartData['labels'] = [];
             $this->chartData['data'] = [];
         }
+    }
 
-        return view('livewire.chart-filter', [
-            'sensors' => $sensors
-        ]);
+    public function render()
+    {
+        $this->chartData();
+
+        return view('livewire.chart-filter');
     }
 
     #[On('projectSelected')]

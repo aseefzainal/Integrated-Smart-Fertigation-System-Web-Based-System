@@ -180,12 +180,12 @@
     <div
         class="border-[1px] rounded-lg border-gray-200 dark:border-gray-600 md:h-96 shadow-md bg-white overflow-y-auto overscroll-none no-scrollbar flex flex-col">
         <div class="flex items-center justify-between py-2 px-3 text-sm sticky top-0 bg-white z-10 shadow-sm">
-            <h3 class="text-base">Data Sensor</h3>
+            <h3 class="text-sm sm:text-base">Data Sensor</h3>
             @if (!$sensorNotifications->isEmpty() || !$limitSensors->isEmpty())
                 <div wire:click="$set('showSensorModal', true)"
-                    class="p-2 cursor-pointer rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700">
+                    class="p-1.5 sm:p-2 cursor-pointer rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                        class="size-5 text-gray-400">
+                        class="size-4 sm:size-5 text-gray-400">
                         <path fill-rule="evenodd"
                             d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 0 0 0 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 0 0 0-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 0 0-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 0 0-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 0 0-1.85-1.567h-1.843ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z"
                             clip-rule="evenodd" />
@@ -194,15 +194,15 @@
             @endif
         </div>
         @if (!$sensors->isEmpty())
-            <div class="grid sm:grid-cols-2 gap-3 px-3 pt-2 pb-3">
+            <div class="grid lg:grid-cols-2 gap-3 px-3 pt-2 pb-3">
                 @php
                     function icon($sensorId)
                     {
                         if ($sensorId == 1) {
-                            return '<i class="fi fi-sr-bag-seedling text-[1.7rem] pt-2"></i>';
+                            return '<i class="fi fi-sr-bag-seedling text-[1.5rem] sm:text-[1.75rem] pt-2"></i>';
                         } elseif ($sensorId == 2 || $sensorId == 3) {
                             return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                            class="size-8">
+                            class="size-6 sm:size-7">
                             <path
                                 d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
                             <path fill-rule="evenodd"
@@ -210,7 +210,7 @@
                                 clip-rule="evenodd" />
                         </svg>';
                         } elseif ($sensorId == 4 || $sensorId == 5) {
-                            return ' <i class="fi fi-ss-raindrops text-2xl pt-2"></i>';
+                            return ' <i class="fi fi-ss-raindrops text-2xl sm:text-[1.75rem] pt-2"></i>';
                         }
                     }
                 @endphp
@@ -218,7 +218,7 @@
                     <div class="flex items-center shadow-[0_0_5px_2px_rgb(0_0_0/0.1)] rounded-lg p-3">
                         {!! icon($sensor->sensor_id) !!}
                         <div class="ml-3 pl-3 border-s-[1px]">
-                            <h3>{{ $sensor->name }}</h3>
+                            <h3 class="text-sm sm:text-base">{{ $sensor->name }}</h3>
                             <div class="text-green-600 mt-2">
                                 @livewire('sensors.latest-data', ['sensorId' => $sensor->sensor_id, 'value' => $sensor->value, 'unit' => $sensor->unit], key($sensor->sensor_id))
                                 {{-- <h3 class="text-2xl">{{ $sensor->value }}
@@ -230,7 +230,7 @@
                 @endforeach
             </div>
         @else
-            <div class="col-span-2 h-full flex flex-col justify-center items-center bg-slate-100">
+            <div class="col-span-2 h-full flex flex-col justify-center items-center bg-slate-100 text-center text-xs sm:text-base text-slate-700 py-5 px-2">
                 <p>No data sensors are currently connected to this project.</p>
                 <p class="mt-2">Please contact an administrator to add sensors.</p>
             </div>

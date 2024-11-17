@@ -330,7 +330,7 @@
                                     <p class="text-gray-900">
                                         {{ $project->name }}
                                     </p>
-                                    <span class="text-green-500">• Online</span>
+                                    <span class="{{ $project->status ? 'text-green-500' : 'text-red-500' }}">{{ $project->status ? '• Online' : '• Offline' }}</span>
                                 </div>
                                 <div class="text-gray-900 p-2 bg-slate-50 rounded-lg">
                                     {{ $project->category->name }}

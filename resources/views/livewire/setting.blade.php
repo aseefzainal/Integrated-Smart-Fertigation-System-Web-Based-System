@@ -107,7 +107,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 py-6 border-t-2">
                 <h3 class="font-medium mb-5 sm:mb-0">Social Media</h3>
                 <div class="sm:col-span-2">
-                    <div class="pb-3 border-b-2 flex justify-between">
+                    <div class="pb-3 border-b-2 flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="border-[3px] border-black pl-2 pr-1 py-1.5 rounded-full">
                                 <svg class="w-7 h-7" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"

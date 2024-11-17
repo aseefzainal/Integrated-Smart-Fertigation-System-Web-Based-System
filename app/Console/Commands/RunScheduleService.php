@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use run;
 use Carbon\Carbon;
 use App\Models\Project;
+use App\Services\BillService;
 use App\Services\Notifications;
 use Illuminate\Console\Command;
 use App\Services\ScheduleService;
@@ -27,23 +28,26 @@ class RunScheduleService extends Command
     protected $description = 'Run Schedule Service';
     protected $scheduleService;
     protected $notification;
+    protected $billService;
 
     /**
      * Execute the console command.
      */
 
-     public function __construct(ScheduleService $scheduleService, Notifications $notification)
+     public function __construct(ScheduleService $scheduleService, Notifications $notification, BillService $billService)
     {
         parent::__construct();
         $this->scheduleService = $scheduleService;
         $this->notification = $notification;
+        $this->billService = $billService;
     }
     
     public function handle()
     {
         $this->scheduleService->updateInputStatus();
         $this->notification->ResetNotification();
-        
+        $this->billService->generateSmsBillForUser();
+
         $threshold = Carbon::now()->subMinutes(5); // Set your threshold, e.g., 5 minutes
         $projects = Project::where('last_active_at', '<', $threshold)
                             ->orWhereNull('last_active_at')
